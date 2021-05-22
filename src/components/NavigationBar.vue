@@ -32,10 +32,51 @@ export default class NavigationBar extends Vue {
 
     mounted() {
         document.addEventListener("keydown", this.onKeyDown);
+        this.hookItems(0);
     }
 
     destroyed() {
         document.removeEventListener("keydown", this.onKeyDown);
+    }
+
+    hookItems(op: number) {
+        if (!this.data.hookItem.items) {
+            return;
+        }
+        let index = 0;
+        let el = this.data.hookItem.items() as HTMLDivElement;
+        if (el.hasAttribute("nav-index")) {
+            index = Number.parseInt(el.getAttribute("nav-index")!);
+        }
+        let children = el.children;
+        if (children.length) {
+            if (index + op < 0) {
+                index = children.length - 1;
+            } else if (index + op >= children.length) {
+                index = 0;
+            } else {
+                index += op;
+            }
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i] as HTMLElement;
+                if (!child.hasAttribute("tabindex")) {
+                    child.setAttribute("tabindex", i + "");
+                }
+                if (i === index) {
+                    child.focus();
+                    el.setAttribute("nav-index", index + "");
+                }
+            }
+        }
+    }
+
+    hookItemSelect(){
+        if (!this.data.hookItem.items) {
+            return;
+        }
+        let el = this.data.hookItem.items() as HTMLDivElement;
+        let index = Number.parseInt(el.getAttribute("nav-index")!);
+        this.data.hookItem.select(index);
     }
 
     item(key?: NavigationBarItem) {
@@ -56,15 +97,18 @@ export default class NavigationBar extends Vue {
                 break;
             case "Enter":
                 keyDown.enter?.();
+                this.hookItemSelect();
                 break;
             case "SoftRight":
                 keyDown.softRight?.();
                 break;
             case "ArrowUp":
                 keyDown.arrowUp?.();
+                this.hookItems(-1);
                 break;
             case "ArrowDown":
                 keyDown.arrowDown?.();
+                this.hookItems(1);
                 break;
             case "ArrowLeft":
                 keyDown.arrowLeft?.();

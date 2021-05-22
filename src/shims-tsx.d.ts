@@ -12,6 +12,7 @@ declare global {
     }
 
 
+
     type NavigationBarItem = string | {
         text?: string,
     }
@@ -34,7 +35,10 @@ declare global {
                 left?: () => void,
                 right?: () => void,
             }
-        }
+        },
+        [key: string]: any,
     }
+
+    declare var MozActivity: any;
 
 }

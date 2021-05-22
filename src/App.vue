@@ -19,6 +19,7 @@
 body {
     padding: 0px;
     margin: 0px;
-    background: rgba($color: #000000, $alpha: 1.0);
+    background: rgba($color: rgb(255, 255, 255), $alpha: 1.0);
+    // background: rgba($color: rgb(0, 162, 255), $alpha: 1.0);
 }
 </style>
