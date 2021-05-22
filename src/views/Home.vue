@@ -88,9 +88,14 @@ export default class Home extends Vue {
     position: relative;
     background: rgba($color: #eeeeee, $alpha: 1);
     .Items {
-        padding: calc(10px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px calc(10px + #{$dimenNavigationBarHeight}) 16px;
+        padding: calc(10px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px 0 16px;
         // padding: 10px 16px;
         position: relative;
+        &::after {
+            content: "";
+            height: calc(10px + #{$dimenNavigationBarHeight});
+            display: block;
+        }
         .Item {
             background: white;
             font-size: 14px;
