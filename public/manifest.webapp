@@ -10,5 +10,8 @@
     "url": "http://example.com"
   },
   "fullscreen":false,
-  "type": "web"
+  "type": "web",
+  "chrome": {
+    "statusbar": "overlap"
+  }
 }

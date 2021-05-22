@@ -17,6 +17,7 @@ export default class ToolBar extends Vue {
 .ToolBar {
     height: $dimenToolBarHeight;
     background: rgba($color: $colorPrimary, $alpha: 1);
+    box-shadow: 0 2px 2px rgba($color: #000000, $alpha: 0.2);
     .Title {
         color: white;
         font-size: 16px;

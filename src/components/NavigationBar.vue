@@ -1,33 +1,55 @@
 <template>
-    <div class="NavigationBar" :class="[immersive&&'Immersive']">
-        <div class="Keys flex-h">
-            <div class="Left button" @click="onClick_Left">{{left.text}}</div>
-            <div class="Center button" @click="onClick_Center">{{center.text}}</div>
-            <div class="Right button" @click="onClick_Right">{{right.text}}</div>
-        </div>
+    <div class="NavigationBar">
+        <div class="Left button" @click="onClick_Left">{{left.text}}</div>
+        <div class="Center button" @click="onClick_Center">{{center.text}}</div>
+        <div class="Right button" @click="onClick_Right">{{right.text}}</div>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
+export type NavigationBarItem = string | {
+    text?: string,
+}
+
+export interface NavigationBarOptions {
+    left?: NavigationBarItem,
+    center?: NavigationBarItem,
+    right?: NavigationBarItem,
+    on?: {
+        keyDown?: {
+            softLeft?: () => void,
+            enter?: () => void,
+            softRight?: () => void,
+            arrowUp?: () => void,
+            arrowDown?: () => void,
+            arrowLeft?: () => void,
+            arrowRight?: () => void,
+            up?: () => void,
+            down?: () => void,
+            left?: () => void,
+            right?: () => void,
+        }
+    },
+    [key: string]: any,
+}
 
 @Component
 export default class NavigationBar extends Vue {
 
-    @Prop({ default: () => { return {} } }) readonly data!: NavigationBarData;
-    @Prop() readonly immersive?: boolean;
+    @Prop({ default: () => { return {} } }) readonly options!: NavigationBarOptions;
 
     get left() {
-        return this.item(this.data.left);
+        return this.item(this.options.left);
     }
 
     get center() {
-        return this.item(this.data.center);
+        return this.item(this.options.center);
     }
 
     get right() {
-        return this.item(this.data.right);
+        return this.item(this.options.right);
     }
 
     mounted() {
@@ -40,11 +62,11 @@ export default class NavigationBar extends Vue {
     }
 
     hookItems(op: number) {
-        if (!this.data.hookItem.items) {
+        if (!this.options.hookItem.items) {
             return;
         }
         let index = 0;
-        let el = this.data.hookItem.items() as HTMLDivElement;
+        let el = this.options.hookItem.items() as HTMLDivElement;
         if (el.hasAttribute("nav-index")) {
             index = Number.parseInt(el.getAttribute("nav-index")!);
         }
@@ -59,24 +81,39 @@ export default class NavigationBar extends Vue {
             }
             for (let i = 0; i < children.length; i++) {
                 const child = children[i] as HTMLElement;
+                // child.blur();
                 if (!child.hasAttribute("tabindex")) {
                     child.setAttribute("tabindex", i + "");
                 }
                 if (i === index) {
-                    child.focus();
                     el.setAttribute("nav-index", index + "");
+                    // child.scrollTo({top:1E10});
+                    child.focus({ preventScroll: true });
+                    el.scrollTo({
+                        top: child.offsetTop - (el.clientHeight - child.clientHeight) / 2,
+                        behavior: "smooth",
+                    })
+                    // if (child.offsetTop - el.scrollTop > (el.clientHeight - child.clientHeight) / 2) {
+                    //     // el.scrollTop = child.offsetTop + el.clientHeight / 2;
+
+                    //     console.log(child.offsetTop - el.scrollTop);
+
+                    // } else if (condition) {
+
+                    // }
                 }
             }
         }
+        return true;
     }
 
-    hookItemSelect(){
-        if (!this.data.hookItem.items) {
+    hookItemSelect() {
+        if (!this.options.hookItem.items) {
             return;
         }
-        let el = this.data.hookItem.items() as HTMLDivElement;
+        let el = this.options.hookItem.items() as HTMLDivElement;
         let index = Number.parseInt(el.getAttribute("nav-index")!);
-        this.data.hookItem.select(index);
+        this.options.hookItem.select(index);
     }
 
     item(key?: NavigationBarItem) {
@@ -86,12 +123,12 @@ export default class NavigationBar extends Vue {
         return typeof key === "string" ? { text: key, } : key
     }
 
-    onKeyDown({ key }) {
-        let keyDown = this.data.on?.keyDown;
+    onKeyDown(e: KeyboardEvent) {
+        let keyDown = this.options.on?.keyDown;
         if (!keyDown) {
             return;
         }
-        switch (key) {
+        switch (e.key) {
             case "SoftLeft":
                 keyDown.softLeft?.();
                 break;
@@ -104,11 +141,15 @@ export default class NavigationBar extends Vue {
                 break;
             case "ArrowUp":
                 keyDown.arrowUp?.();
-                this.hookItems(-1);
+                if (this.hookItems(-1)) {
+                    e.preventDefault();
+                };
                 break;
             case "ArrowDown":
                 keyDown.arrowDown?.();
-                this.hookItems(1);
+                if (this.hookItems(1)) {
+                    e.preventDefault();
+                };
                 break;
             case "ArrowLeft":
                 keyDown.arrowLeft?.();
@@ -120,57 +161,46 @@ export default class NavigationBar extends Vue {
     }
 
     onClick_Left() {
-        this.onKeyDown({ key: "SoftLeft" });
+        this.onKeyDown(new KeyboardEvent("keydown", { key: "SoftLeft" }));
     }
 
     onClick_Center() {
-        this.onKeyDown({ key: "Enter" });
+        this.onKeyDown(new KeyboardEvent("keydown", { key: "Enter" }));
     }
 
     onClick_Right() {
-        this.onKeyDown({ key: "SoftRight" });
+        this.onKeyDown(new KeyboardEvent("keydown", { key: "SoftRight" }));
     }
 }
 </script>
 
 <style lang="scss" scoped>
 .NavigationBar {
-    background: #000000;
     position: relative;
-    .Keys {
-        background: rgba($color: #000000, $alpha: 0.5);
-        height: $dimenNavigationBarHeight;
-        font-size: 12px;
-        color: white;
-        position: relative;
-        .Left,
-        .Center,
-        .Right {
-            position: absolute;
-        }
-        .Left {
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .Right {
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .Center {
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
+    background: rgba($color: #000000, $alpha: 1);
+    height: $dimenNavigationBarHeight;
+    font-size: 12px;
+    color: white;
+    position: relative;
+    .Left,
+    .Center,
+    .Right {
+        position: absolute;
     }
-    &.Immersive {
-        .Keys {
-            position: absolute;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-        }
+    .Left {
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .Right {
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .Center {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 </style>

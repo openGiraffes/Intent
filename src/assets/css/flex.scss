@@ -126,17 +126,18 @@
 
 .scroll-y {
     overflow-y: auto;
+    // scroll-behavior: smooth;
 }
 
 .scroll-x {
     overflow-x: auto;
+    // scroll-behavior: smooth;
 }
 
-.flex-1 {
-    flex: 1;
+.flex-n {
     flex-basis: 0;
-    // overflow: hidden;
-
+    min-height: 0;
+    min-width: 0;
     &.y {
         @extend .scroll-y;
     }
@@ -145,7 +146,12 @@
     }
 }
 
+.flex-1 {
+    @extend .flex-n;
+    flex: 1;
+}
+
 .flex-2 {
+    @extend .flex-n;
     flex: 2;
-    flex-basis: 0;
 }

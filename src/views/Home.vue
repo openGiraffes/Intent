@@ -1,39 +1,39 @@
 <template>
-    <div class="Home flex-v wh-100">
-        <ToolBar title="Intent"></ToolBar>
-        <div class="Content flex-1">
-            <div class="Items" ref="Items">
-                <div class="Item" v-for="(item,index) in mItems" :key="index">{{item.text}}</div>
-            </div>
+    <Page class="Home" :options="mPageOptions">
+        <div class="Items wh-100 scroll-y" ref="Items">
+            <div class="Item" v-for="(item,index) in mItems" :key="index">{{item.text}}</div>
         </div>
-        <NavigationBar :data="mKeys" :immersive="true"></NavigationBar>
-    </div>
+    </Page>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Axios, { AxiosPromise, AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
-import NavigationBar from "@/components/NavigationBar.vue";
-import ToolBar from "@/components/ToolBar.vue";
-
+import Page, { PageOptions } from "@/components/Page.vue";
+import { NavigationBarOptions } from "@/components/NavigationBar.vue";
 
 @Component({
     components: {
-        ToolBar,
-        NavigationBar,
+        Page,
     },
 })
 export default class Home extends Vue {
 
-    mKeys = this.createKeys();
+    mPageOptions: PageOptions = {
+        statusBar: {
+            padding: false,
+        },
+        toolBar: {
+            title: "Intent",
+            padding: false,
+        },
+        navigationBar: {
+            options: this.createNavigationBarOptions(),
+            padding: false,
+        }
+    }
 
     mItems = [
-        {
-            text: "第一项测试",
-        },
-        {
-            text: "第二项测试",
-        },
+        ...Array.from({ length: 20 }).map((o, i) => { return { text: "测试" + i } as any }),
         {
             text: "开发者选项",
             click: () => {
@@ -52,7 +52,7 @@ export default class Home extends Vue {
         },
     ]
 
-    createKeys(): NavigationBarData {
+    createNavigationBarOptions(): NavigationBarOptions {
         let context = this;
         return {
             left: "左",
@@ -60,6 +60,10 @@ export default class Home extends Vue {
             right: "右",
             on: {
                 keyDown: {
+                    softLeft: () => {
+                        console.log("softLeft");
+
+                    }
                 }
             },
             hookItem: {
@@ -82,22 +86,36 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 .Home {
     position: relative;
-    .Content {
-        .Items {
+    background: rgba($color: #eeeeee, $alpha: 1);
+    .Items {
+        padding: calc(10px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px calc(10px + #{$dimenNavigationBarHeight}) 16px;
+        // padding: 10px 16px;
+        position: relative;
+        .Item {
+            background: white;
+            font-size: 14px;
             padding: 10px 16px;
-            .Item {
-                background: white;
-                font-size: 16px;
-                padding: 10px 16px;
-                box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
-                border-radius: 5px;
-                &:focus {
-                    background: rgba($color: #d6d6d6, $alpha: 1);
-                }
-                & + .Item {
-                    margin-top: 10px;
-                }
+            box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.1);
+            border-radius: 6px;
+            &:focus {
+                background: rgba($color: $colorPrimary, $alpha: 1);
+                box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.5);
+                color: white;
             }
+            & + .Item {
+                margin-top: 10px;
+            }
+        }
+    }
+    ::v-deep {
+        .StatusBar {
+            background-color: rgba($color: $colorPrimary, $alpha: 0.9);
+        }
+        .ToolBar {
+            background-color: rgba($color: $colorPrimary, $alpha: 0.9);
+        }
+        .NavigationBar {
+            background-color: rgba($color: #000000, $alpha: 0.5);
         }
     }
 }

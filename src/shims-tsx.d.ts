@@ -12,33 +12,6 @@ declare global {
     }
 
 
-
-    type NavigationBarItem = string | {
-        text?: string,
-    }
-
-    interface NavigationBarData {
-        left?: NavigationBarItem,
-        center?: NavigationBarItem,
-        right?: NavigationBarItem,
-        on?: {
-            keyDown?: {
-                softLeft?: () => void,
-                enter?: () => void,
-                softRight?: () => void,
-                arrowUp?: () => void,
-                arrowDown?: () => void,
-                arrowLeft?: () => void,
-                arrowRight?: () => void,
-                up?: () => void,
-                down?: () => void,
-                left?: () => void,
-                right?: () => void,
-            }
-        },
-        [key: string]: any,
-    }
-
     declare var MozActivity: any;
 
 }
