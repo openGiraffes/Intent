@@ -72,15 +72,16 @@ export default class Toast extends Vue {
     bottom: 0;
     pointer-events: none;
     .Message {
-        padding: 5px 12px;
+        padding: 4px 12px;
         font-size: 14px;
         max-width: 80%;
-        min-width: 50px;
+        // min-width: 50px;
         margin-bottom: 50px;
         word-break: break-all;
         text-align: center;
         background: rgba($color: #000000, $alpha: 0.7);
         color:white;
+        border-radius: 6px;
     }
 }
 </style>
