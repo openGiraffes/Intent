@@ -4,8 +4,10 @@
             <slot></slot>
         </div>
         <div class="StatusBar w-100" :style="style_StatusBar"></div>
-        <ToolBar class="ToolBar w-100" v-bind="mOptions.toolBar" :style="style_ToolBar"></ToolBar>
-        <NavigationBar class="NavigationBar w-100" v-bind="mOptions.navigationBar" :style="style_NavigationBar"></NavigationBar>
+        <ToolBar class="ToolBar w-100" v-show="mOptions.toolBar.show"
+            :title="mOptions.toolBar.title" :style="style_ToolBar"></ToolBar>
+        <NavigationBar class="NavigationBar w-100"
+            :options="mOptions.navigationBar.options" :style="style_NavigationBar"></NavigationBar>
     </div>
 </template>
 
@@ -21,6 +23,7 @@ export interface PageOptions {
         backgroundColor?: string,
     },
     toolBar?: {
+        show?: boolean,
         title?: string,
         padding?: boolean,
         backgroundColor?: string,
@@ -60,6 +63,7 @@ export default class Page extends Vue {
                 padding: true,
             },
             toolBar: {
+                show: true,
                 title: "",
                 padding: true,
             },

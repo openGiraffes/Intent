@@ -32,8 +32,17 @@ export default class Home extends Vue {
         }
     }
 
+    mIndex = 0;
+
     mItems = [
-        ...Array.from({ length: 20 }).map((o, i) => { return { text: "测试" + i } as any }),
+        {
+            text: "Toast",
+            click: () => {
+                this.$prompt.showToast(++this.mIndex);
+            }
+        },
+        ...Array.from({ length: 10 }).map((o, i) => { return { text: "测试" + i } as any }),
+
         {
             text: "开发者选项",
             click: () => {

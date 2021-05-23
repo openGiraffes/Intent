@@ -30,6 +30,7 @@ export interface NavigationBarOptions {
             down?: () => void,
             left?: () => void,
             right?: () => void,
+            [key: string]: any,
         }
     },
     [key: string]: any,
@@ -67,6 +68,9 @@ export default class NavigationBar extends Vue {
         }
         let index = 0;
         let el = this.options.hookItem.items() as HTMLDivElement;
+        if (!el) {
+            return;
+        }
         if (el.hasAttribute("nav-index")) {
             index = Number.parseInt(el.getAttribute("nav-index")!);
         }
@@ -112,6 +116,9 @@ export default class NavigationBar extends Vue {
             return;
         }
         let el = this.options.hookItem.items() as HTMLDivElement;
+        if (!el) {
+            return;
+        }
         let index = Number.parseInt(el.getAttribute("nav-index")!);
         this.options.hookItem.select(index);
     }
@@ -157,6 +164,11 @@ export default class NavigationBar extends Vue {
             case "ArrowRight":
                 keyDown.arrowRight?.();
                 break;
+            default:
+                if (e.key in keyDown) {
+                    keyDown[e.key]();
+                }
+                break
         }
     }
 

@@ -14,4 +14,24 @@ declare global {
 
     declare var MozActivity: any;
 
+    
+    interface String {
+        replaceAll(s1: string, s2: string): string;
+        format(...any): string;
+    }
+
+    interface Date {
+        format(str: string): string;
+    }
+
+    interface AnyObject {
+        [key: string]: any
+    }
+    
+    interface LngLat {
+        lng: number,
+        lat: number,
+    }
+
+
 }

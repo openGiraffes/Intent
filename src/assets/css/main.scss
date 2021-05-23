@@ -49,3 +49,17 @@
 .only-children-events {
     pointer-events: none;
 }
+
+.base-shadow {
+    box-shadow: 0 0 5px rgba($color: $colorPrimary, $alpha: 0.1);
+}
+
+.floating-layout {
+    background: rgba($color: white, $alpha: 0.95);
+    border-radius: 5px;
+    @extend .base-shadow;
+    // &:hover{
+    //     box-shadow: 0 0 5px #00000032;
+    //     transition: box-shadow 0.3s;
+    // }
+}
