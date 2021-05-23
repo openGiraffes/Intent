@@ -1,7 +1,7 @@
 <template>
     <div class="Toast flex-v center bottom">
         <transition name="bounce">
-            <div v-if="mShow" class="Message floating-layout">{{msg}}</div>
+            <div v-if="mShow" class="Message">{{msg}}</div>
         </transition>
     </div>
 </template>
@@ -72,12 +72,15 @@ export default class Toast extends Vue {
     bottom: 0;
     pointer-events: none;
     .Message {
-        padding: 5px 10px;
+        padding: 5px 12px;
         font-size: 14px;
         max-width: 80%;
+        min-width: 50px;
         margin-bottom: 50px;
         word-break: break-all;
         text-align: center;
+        background: rgba($color: #000000, $alpha: 0.7);
+        color:white;
     }
 }
 </style>
