@@ -1,17 +1,19 @@
 {
-  "name": "Intent",
-  "description": "Intent",
-  "launch_path": "/index.html",
-  "icons": {
-    "128": "/icons/icon128x128.png"
-  },
-  "developer": {
-    "name": "Tri",
-    "url": "http://example.com"
-  },
-  "fullscreen":false,
-  "type": "web",
-  "chrome": {
-    "statusbar": "overlap"
-  }
+    "name": "Intent",
+    "description": "Intent",
+    "version": "0.1",
+    "origin": "app://intent.kaios.lcsunm.cc",
+    "launch_path": "/index.html",
+    "icons": {
+        "128": "/icons/icon128x128.png"
+    },
+    "developer": {
+        "name": "Lcsunm",
+        "url": "http://kaios.lcsunm.cc"
+    },
+    "fullscreen": false,
+    "type": "web",
+    "chrome": {
+        "statusbar": "overlap"
+    }
 }
