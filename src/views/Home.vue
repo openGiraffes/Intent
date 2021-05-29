@@ -1,92 +1,65 @@
 <template>
     <Page class="Home" :options="mPageOptions">
-        <div class="Items wh-100 scroll-y" ref="Items">
-            <div class="Item" v-for="(item,index) in mItems" :key="index">{{item.text}}</div>
+        <div class="Items wh-100 top scroll-y" ref="Items">
+            <div class="cell Item flex-v bottom" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">
+                <div class="Big">{{item.text}}</div>
+                <div>{{item.text}}</div>
+            </div>
         </div>
     </Page>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Page, { PageOptions } from "@/components/Page.vue";
-import { NavigationBarOptions } from "@/components/NavigationBar.vue";
+import { PageOptions } from "@/components/Page.vue";
+import MyPage from "@/common/MyPage";
+import R from "@/common/R";
 
-@Component({
-    components: {
-        Page,
-    },
-})
-export default class Home extends Vue {
+@Component
+export default class Home extends MyPage {
+    $refs!: {
+        Items: Element;
+    }
 
-    mPageOptions: PageOptions = {
-        statusBar: {
-            padding: false,
-        },
-        toolBar: {
-            title: "Intent",
-            padding: false,
-        },
-        navigationBar: {
-            options: this.createNavigationBarOptions(),
-            padding: false,
+
+    mPageOptions = this.createPageOptions();
+    createPageOptions(): PageOptions {
+        let context = this;
+        return {
+            statusBar: {
+                padding: false,
+                // backgroundColor: R.color.transparent,
+                backgroundColor: R.color.primaryAlpha(0.95),
+            },
+            toolBar: {
+                show: true,
+                title: "Intent",
+                padding: false,
+                backgroundColor: R.color.primaryAlpha(0.95),
+            },
+            navigationBar: {
+                show: false,
+            }
         }
     }
 
-    mIndex = 0;
-
     mItems = [
         {
-            text: "Toast",
+            text: "网络",
             click: () => {
-                this.$prompt.showToast(++this.mIndex);
+                this.$pager.navigateTo("Network");
             }
         },
-        ...Array.from({ length: 10 }).map((o, i) => { return { text: "测试" + i } as any }),
-
         {
-            text: "开发者选项",
+            text: "其他",
             click: () => {
-                if (window.MozActivity) {
-                    var act = new MozActivity({
-                        name: "configure",
-                        data: {
-                            target: "device",
-                            section: "developer"
-                        }
-                    })
-                } else {
-                    window.alert('Please open the page from the device itself!')
-                }
+                this.$pager.navigateTo("Other");
             }
         },
     ]
 
-    createNavigationBarOptions(): NavigationBarOptions {
-        let context = this;
-        return {
-            left: "左",
-            center: "中",
-            right: "右",
-            on: {
-                keyDown: {
-                    softLeft: () => {
-                        console.log("softLeft");
-
-                    }
-                }
-            },
-            hookItem: {
-                items: () => {
-                    return this.$refs.Items;
-                },
-                select: (index) => {
-                    this.mItems[index].click?.();
-                }
-            }
-        }
-    }
-
     mounted() {
+        this.$tv.scrollEl = this.$refs.Items;
     }
 
 }
@@ -100,6 +73,7 @@ export default class Home extends Vue {
         padding: calc(10px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px 0 16px;
         // padding: 10px 16px;
         position: relative;
+        @include columnsFlex(2, 7px, 7px);
         &::after {
             content: "";
             height: calc(10px + #{$dimenNavigationBarHeight});
@@ -111,25 +85,21 @@ export default class Home extends Vue {
             padding: 10px 16px;
             box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.1);
             border-radius: 6px;
-            &:focus {
+            height: 60px;
+            overflow: hidden;
+            position: relative;
+            .Big {
+                color: rgba($color: $colorPrimary, $alpha: 0.05);
+                font-size: 70px;
+                position: absolute;
+                top: -10px;
+                left: 50%;
+            }
+            &.focus {
                 background: rgba($color: $colorPrimary, $alpha: 1);
                 box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.5);
                 color: white;
             }
-            & + .Item {
-                margin-top: 10px;
-            }
-        }
-    }
-    ::v-deep {
-        .StatusBar {
-            background-color: rgba($color: $colorPrimary, $alpha: 0.9);
-        }
-        .ToolBar {
-            background-color: rgba($color: $colorPrimary, $alpha: 0.9);
-        }
-        .NavigationBar {
-            background-color: rgba($color: #000000, $alpha: 0.5);
         }
     }
 }

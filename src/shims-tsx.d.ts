@@ -1,5 +1,6 @@
 import Vue, { VNode } from 'vue'
 
+
 declare global {
     namespace JSX {
         // tslint:disable no-empty-interface
@@ -11,6 +12,8 @@ declare global {
         }
     }
 
+    declare const isDev: boolean
+    declare const versionCode: string
 
     declare var MozActivity: any;
 

@@ -148,6 +148,15 @@ export const assign = <T, U>(target: T, source: U): T & U => {
     }
 }
 
+
+export const formatNumber = (v: number) => {
+    if (v > 10000) {
+        return (v / 10000).toFixed(1) + "w";
+    } else {
+        return v;
+    }
+}
+
 export default class {
     vue: Vue;
     uuid = uuid;
@@ -157,6 +166,7 @@ export default class {
     yesterday = yesterday;
     age = age;
     duration = duration;
+    formatNumber= formatNumber;
 
     private mTimeoutMap: Record<number, any> = {};
 

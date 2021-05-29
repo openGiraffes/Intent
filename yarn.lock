@@ -3734,6 +3734,11 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
+focusable-core@latest:
+  version "0.0.4"
+  resolved "https://registry.nlark.com/focusable-core/download/focusable-core-0.0.4.tgz#3c4580782d9f3a159a741c83938848351aabf7bd"
+  integrity sha1-PEWAeC2fOhWadByDk4hINRqr970=
+
 follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.14.1"
   resolved "https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.1.tgz?cache=0&sync_timestamp=1620555300559&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffollow-redirects%2Fdownload%2Ffollow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
@@ -7950,6 +7955,13 @@ vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.nlark.com/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
+
+vue-tv-focusable@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.nlark.com/vue-tv-focusable/download/vue-tv-focusable-1.0.2.tgz#b61c2e380a4a8f8499b931bf7d36fa27e469586f"
+  integrity sha1-thwuOApKj4SZuTG/fTb6J+RpWG8=
+  dependencies:
+    focusable-core latest
 
 vue@^2.6.11:
   version "2.6.12"

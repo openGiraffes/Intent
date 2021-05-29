@@ -138,12 +138,12 @@
     flex-basis: 0;
     min-height: 0;
     min-width: 0;
-    &.y {
-        @extend .scroll-y;
-    }
-    &.x {
-        @extend .scroll-x;
-    }
+    // &.y {
+    //     @extend .scroll-y;
+    // }
+    // &.x {
+    //     @extend .scroll-x;
+    // }
 }
 
 .flex-1 {

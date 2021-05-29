@@ -3,7 +3,6 @@
     outline: 0;
 }
 
-
 .pointer {
     cursor: pointer;
 }
@@ -62,4 +61,17 @@
     //     box-shadow: 0 0 5px #00000032;
     //     transition: box-shadow 0.3s;
     // }
+}
+
+img.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @extend .wh-100;
+    &.fill {
+        object-fit: fill;
+    }
+    &.cover {
+        object-fit: cover;
+    }
 }

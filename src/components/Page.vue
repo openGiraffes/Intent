@@ -1,12 +1,13 @@
 <template>
     <div class="Page flex-v wh-100">
-        <div class="Content flex-h" :style="style_Content">
+        <slot name="root"></slot>
+        <div class="Content flex-v" :style="style_Content">
             <slot></slot>
         </div>
         <div class="StatusBar w-100" :style="style_StatusBar"></div>
-        <ToolBar class="ToolBar w-100" v-show="mOptions.toolBar.show"
+        <ToolBar v-show="mOptions.toolBar.show" class="ToolBar w-100"
             :title="mOptions.toolBar.title" :style="style_ToolBar"></ToolBar>
-        <NavigationBar class="NavigationBar w-100"
+        <NavigationBar v-show="mOptions.navigationBar.show" class="NavigationBar w-100"
             :options="mOptions.navigationBar.options" :style="style_NavigationBar"></NavigationBar>
     </div>
 </template>
@@ -32,6 +33,7 @@ export interface PageOptions {
         options?: NavigationBarOptions,
         padding?: boolean,
         backgroundColor?: string,
+        show?: boolean,
     }
 }
 
@@ -68,6 +70,7 @@ export default class Page extends Vue {
                 padding: true,
             },
             navigationBar: {
+                show: false,
                 padding: true,
             }
         } as PageOptions, this.options);
@@ -76,8 +79,8 @@ export default class Page extends Vue {
     get style_Content() {
         return {
             top: ((this.mOptions.statusBar!.padding ? R.dimen.statusBarHeight : 0)
-                + (this.mOptions.toolBar!.padding ? R.dimen.toolBarHeight : 0)) + "px",
-            bottom: (this.mOptions.navigationBar!.padding ? R.dimen.navigationBarHeight : 0) + "px",
+                + ((this.mOptions.toolBar!.show && this.mOptions.toolBar!.padding) ? R.dimen.toolBarHeight : 0)) + "px",
+            bottom: ((this.mOptions.navigationBar!.show && this.mOptions.navigationBar!.padding) ? R.dimen.navigationBarHeight : 0) + "px",
         }
     }
 

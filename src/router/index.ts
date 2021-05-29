@@ -1,19 +1,38 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+    {
+        path: '/',
+        name: 'Home',
+        component: () => import("@/views/Home.vue")
+    },
+    {
+        path: '/Network',
+        name: 'Network',
+        component: () => import("@/views/network/NetworkIndex.vue"),
+    },
+    {
+        path: '/Network/HttpProxy',
+        name: 'HttpProxy',
+        component: () => import("@/views/network/httpproxy/HttpProxy.vue"),
+    },
+    {
+        path: '/Network/SelectWifi',
+        name: 'SelectWifi',
+        component: () => import("@/views/network/httpproxy/SelectWifi.vue"),
+    },
+    {
+        path: '/Other',
+        name: 'Other',
+        component: () => import("@/views/other/OtherIndex.vue"),
+    },
 ]
 
 const router = new VueRouter({
-  routes
+    routes
 })
 
 export default router

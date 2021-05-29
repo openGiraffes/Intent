@@ -1,5 +1,34 @@
-$colorPrimary:rgb(0, 162, 255);
+$colorPrimary: #6f02b5;
+$colorAccent: rgb(249, 143, 14);
 
 $dimenStatusBarHeight: 26px;
 $dimenToolBarHeight: 36px;
 $dimenNavigationBarHeight: 18px;
+
+:export {
+    color: {
+        primary: $colorPrimary;
+        accent: $colorAccent;
+    }
+}
+
+@mixin columnsFlex($count, $hs: 0px, $vs: $hs, $rows: 0) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+
+    & > .cell {
+        width: calc((100% - #{($count - 1) * $hs}) / #{$count});
+        @if $rows > 0 {
+            height: calc((100% - #{($rows - 1) * $vs}) / #{$rows});
+        }
+        &:not(:nth-child(#{$count}n + 1)) {
+            margin-left: $hs;
+        }
+
+        &:nth-child(n + #{$count + 1}) {
+            margin-top: $vs;
+        }
+    }
+}

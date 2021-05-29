@@ -21,6 +21,7 @@ module.exports = {
     configureWebpack: {
         plugins: [
             new Webpack.DefinePlugin({
+                isDev: process.env.NODE_ENV === "development",
                 versionCode: versionCode,
             }),
         ],

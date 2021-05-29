@@ -1,5 +1,5 @@
 <template>
-    <div class="NavigationBar">
+    <div class="NavigationBar" @keydown="onKeyDown">
         <div class="Left button" @click="onClick_Left">{{left.text}}</div>
         <div class="Center button" @click="onClick_Center">{{center.text}}</div>
         <div class="Right button" @click="onClick_Right">{{right.text}}</div>
@@ -13,25 +13,29 @@ export type NavigationBarItem = string | {
     text?: string,
 }
 
+interface Keys {
+    softLeft?: () => void,
+    enter?: () => void,
+    softRight?: () => void,
+    arrowUp?: () => void,
+    arrowDown?: () => void,
+    arrowLeft?: () => void,
+    arrowRight?: () => void,
+    up?: () => void,
+    down?: () => void,
+    left?: () => void,
+    right?: () => void,
+    [key: string]: any,
+}
+
+type EventType = "keyDown" | "keyUp" | "keyPress" | "keyLongPress";
+
 export interface NavigationBarOptions {
     left?: NavigationBarItem,
     center?: NavigationBarItem,
     right?: NavigationBarItem,
     on?: {
-        keyDown?: {
-            softLeft?: () => void,
-            enter?: () => void,
-            softRight?: () => void,
-            arrowUp?: () => void,
-            arrowDown?: () => void,
-            arrowLeft?: () => void,
-            arrowRight?: () => void,
-            up?: () => void,
-            down?: () => void,
-            left?: () => void,
-            right?: () => void,
-            [key: string]: any,
-        }
+        [P in EventType]?: Keys;
     },
     [key: string]: any,
 }
@@ -40,6 +44,12 @@ export interface NavigationBarOptions {
 export default class NavigationBar extends Vue {
 
     @Prop({ default: () => { return {} } }) readonly options!: NavigationBarOptions;
+
+    mEventAdded = false;
+    mKeyEvents: {
+        key: string,
+        timer: any;
+    }[] = [];
 
     get left() {
         return this.item(this.options.left);
@@ -54,74 +64,43 @@ export default class NavigationBar extends Vue {
     }
 
     mounted() {
-        document.addEventListener("keydown", this.onKeyDown);
-        this.hookItems(0);
+        this.addEventListener();
     }
 
     destroyed() {
+        this.removeEventListener();
+    }
+
+    activated() {
+        this.addEventListener();
+    }
+
+    deactivated() {
+        this.removeEventListener();
+    }
+
+    addEventListener() {
+        if (this.mEventAdded) {
+            return;
+        }
+        document.addEventListener("keydown", this.onKeyDown);
+        document.addEventListener("keyup", this.onKeyUp);
+        this.mEventAdded = true;
+    }
+
+    removeEventListener() {
+        if (!this.mEventAdded) {
+            return;
+        }
+        this.mKeyEvents.forEach(o => {
+            clearTimeout(o.timer);
+        })
+        this.mKeyEvents = [];
         document.removeEventListener("keydown", this.onKeyDown);
+        document.removeEventListener("keyup", this.onKeyUp);
+        this.mEventAdded = false;
     }
 
-    hookItems(op: number) {
-        if (!this.options.hookItem.items) {
-            return;
-        }
-        let index = 0;
-        let el = this.options.hookItem.items() as HTMLDivElement;
-        if (!el) {
-            return;
-        }
-        if (el.hasAttribute("nav-index")) {
-            index = Number.parseInt(el.getAttribute("nav-index")!);
-        }
-        let children = el.children;
-        if (children.length) {
-            if (index + op < 0) {
-                index = children.length - 1;
-            } else if (index + op >= children.length) {
-                index = 0;
-            } else {
-                index += op;
-            }
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i] as HTMLElement;
-                // child.blur();
-                if (!child.hasAttribute("tabindex")) {
-                    child.setAttribute("tabindex", i + "");
-                }
-                if (i === index) {
-                    el.setAttribute("nav-index", index + "");
-                    // child.scrollTo({top:1E10});
-                    child.focus({ preventScroll: true });
-                    el.scrollTo({
-                        top: child.offsetTop - (el.clientHeight - child.clientHeight) / 2,
-                        behavior: "smooth",
-                    })
-                    // if (child.offsetTop - el.scrollTop > (el.clientHeight - child.clientHeight) / 2) {
-                    //     // el.scrollTop = child.offsetTop + el.clientHeight / 2;
-
-                    //     console.log(child.offsetTop - el.scrollTop);
-
-                    // } else if (condition) {
-
-                    // }
-                }
-            }
-        }
-        return true;
-    }
-
-    hookItemSelect() {
-        if (!this.options.hookItem.items) {
-            return;
-        }
-        let el = this.options.hookItem.items() as HTMLDivElement;
-        if (!el) {
-            return;
-        }
-        let index = Number.parseInt(el.getAttribute("nav-index")!);
-        this.options.hookItem.select(index);
-    }
 
     item(key?: NavigationBarItem) {
         if (!key) {
@@ -131,57 +110,76 @@ export default class NavigationBar extends Vue {
     }
 
     onKeyDown(e: KeyboardEvent) {
-        let keyDown = this.options.on?.keyDown;
-        if (!keyDown) {
+        if (!e.repeat) {
+            let t = setTimeout(() => {
+                clearTimeout(t);
+                this.mKeyEvents.splice(this.mKeyEvents.findIndex(o => o.key == e.key), 1)
+                this.on("keyLongPress", { key: e.key } as KeyboardEvent);
+            }, 500);
+            this.mKeyEvents.push({
+                key: e.key,
+                timer: t,
+            })
+        }
+        this.on("keyDown", e);
+    }
+
+    onKeyUp(e: KeyboardEvent) {
+        this.on("keyUp", e);
+        let key = this.mKeyEvents.splice(this.mKeyEvents.findIndex(o => o.key == e.key), 1);
+        if (key.length) {
+            clearTimeout(key[0].timer);
+            this.on("keyPress", { key: e.key } as KeyboardEvent);
+        }
+    }
+
+    on(eventType: EventType, e: KeyboardEvent) {
+        let event = this.options.on?.[eventType];
+        if (!event) {
             return;
         }
         switch (e.key) {
             case "SoftLeft":
-                keyDown.softLeft?.();
+            case "Q":
+                event.softLeft?.();
                 break;
             case "Enter":
-                keyDown.enter?.();
-                this.hookItemSelect();
+                event.enter?.();
                 break;
             case "SoftRight":
-                keyDown.softRight?.();
+            case "E":
+                event.softRight?.();
                 break;
             case "ArrowUp":
-                keyDown.arrowUp?.();
-                if (this.hookItems(-1)) {
-                    e.preventDefault();
-                };
+                event.arrowUp?.();
                 break;
             case "ArrowDown":
-                keyDown.arrowDown?.();
-                if (this.hookItems(1)) {
-                    e.preventDefault();
-                };
+                event.arrowDown?.();
                 break;
             case "ArrowLeft":
-                keyDown.arrowLeft?.();
+                event.arrowLeft?.();
                 break;
             case "ArrowRight":
-                keyDown.arrowRight?.();
+                event.arrowRight?.();
                 break;
             default:
-                if (e.key in keyDown) {
-                    keyDown[e.key]();
+                if (e.key in event) {
+                    event[e.key]();
                 }
                 break
         }
     }
 
     onClick_Left() {
-        this.onKeyDown(new KeyboardEvent("keydown", { key: "SoftLeft" }));
+        this.options.on?.keyPress?.softLeft?.();
     }
 
     onClick_Center() {
-        this.onKeyDown(new KeyboardEvent("keydown", { key: "Enter" }));
+        this.options.on?.keyPress?.enter?.();
     }
 
     onClick_Right() {
-        this.onKeyDown(new KeyboardEvent("keydown", { key: "SoftRight" }));
+        this.options.on?.keyPress?.softRight?.();
     }
 }
 </script>

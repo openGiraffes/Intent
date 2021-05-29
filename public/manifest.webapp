@@ -1,6 +1,6 @@
 {
     "name": "Intent",
-    "description": "Intent",
+    "description": "快捷操作",
     "version": "0.1",
     "origin": "app://intent.kaios.lcsunm.cc",
     "launch_path": "/index.html",
@@ -12,8 +12,11 @@
         "url": "http://kaios.lcsunm.cc"
     },
     "fullscreen": false,
-    "type": "web",
+    "type": "certified",
     "chrome": {
         "statusbar": "overlap"
+    },
+    "permissions": {
+        "wifi-manage": {}
     }
 }
