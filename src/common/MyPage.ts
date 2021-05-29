@@ -113,6 +113,12 @@ export default class MyPage extends Mixins(Vue, Loading) {
         this.__page.onStart(fromBack);
         this.loadScrollableEls();
         this.$tv.limitingEl = this.$el;
+        if (!fromBack) {
+            this.$nextTick(() => {
+                let el = this.$el.querySelector("[focusable]");
+                el && this.$tv.requestFocus(el);
+            })
+        }
     }
 
     onResume() {
