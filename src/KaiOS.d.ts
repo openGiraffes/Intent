@@ -6,9 +6,14 @@ interface DOMRequset {
     onerror: (error: any) => void
 }
 
+declare interface HttpProxyInfo {
+    httpProxyHost: string | null;
+    httpProxyPort: number | null;
+}
+
 declare interface Navigator {
     mozWifiManager: {
         getKnownNetworks: () => DOMRequset;
-        setHttpProxy: (network: any, info: { httpProxyHost: string, httpProxyPort: number } | null) => DOMRequset;
+        setHttpProxy: (network: any, info: HttpProxyInfo) => DOMRequset;
     };
 };
