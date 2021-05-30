@@ -49,7 +49,7 @@ export default class OtherIndex extends MyPage {
                 if (window.MozActivity) {
                     let result = new MozActivity({
                         name: "configure",
-                        data: { target: "device", section: "developer111" }
+                        data: { target: "device", section: "developer" }
                     })
                 }
             }
