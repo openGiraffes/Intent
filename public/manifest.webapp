@@ -1,7 +1,7 @@
 {
     "name": "Intent",
     "description": "快捷操作",
-    "version": "0.1",
+    "version": "0.1.1",
     "origin": "app://intent.kaios.lcsunm.cc",
     "launch_path": "/index.html",
     "icons": {

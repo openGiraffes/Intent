@@ -1,7 +1,7 @@
 <template>
     <Page class="SelectWifi" :options="mPageOptions">
         <div class="Items wh-100 scroll-y" ref="Items">
-            <div class="Item" v-focusable v-for="(item,index) in mItems" :key="index" @onFocus="onFocus(index)">{{item.ssid}}</div>
+            <div class="Item card" v-focusable v-for="(item,index) in mItems" :key="index" @onFocus="onFocus(index)">{{item.ssid}}</div>
         </div>
     </Page>
 </template>
@@ -23,7 +23,7 @@ export default class SelectWifi extends MyPage {
             },
             toolBar: {
                 show: true,
-                title: "选择WIFI",
+                title: "选择WIFI（已知网络）",
                 padding: true,
             },
             navigationBar: {
@@ -57,14 +57,23 @@ export default class SelectWifi extends MyPage {
         }
     }
 
-    mItems: any[] = [{
-        ssid: "LC",
-    }, ...Array.from({ length: 20 }).map((o, index) => { return { ssid: "ssid" + index } })];
+    mItems: { ssid: string }[] = [];
 
-    mCurrent: string | null = null;
+    mCurrent: any | null = null;
 
     mounted() {
         this.$tv.scrollEl = this.$refs.Items;
+        this.loadData();
+    }
+
+    loadData() {
+        let request = navigator.mozWifiManager.getKnownNetworks();
+        request.onsuccess = (result) => {
+            this.mItems = result.target.result;//.find((o) => o.ssid == "LC");
+        };
+        request.onerror = (error) => {
+            this.$prompt.showToast("获取失败");
+        };
     }
 
     onFocus(index: number) {
@@ -87,16 +96,6 @@ export default class SelectWifi extends MyPage {
             display: block;
         }
         .Item {
-            background: white;
-            font-size: 14px;
-            padding: 10px 16px;
-            box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.1);
-            border-radius: 6px;
-            &.focus {
-                background: rgba($color: $colorPrimary, $alpha: 1);
-                box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.5);
-                color: white;
-            }
             & + .Item {
                 margin-top: 10px;
             }

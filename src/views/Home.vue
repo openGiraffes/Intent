@@ -1,7 +1,7 @@
 <template>
     <Page class="Home" :options="mPageOptions">
         <div class="Items wh-100 top scroll-y" ref="Items">
-            <div class="cell Item flex-v bottom" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">
+            <div class="cell Item card flex-v bottom" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">
                 <div class="Big">{{item.text}}</div>
                 <div>{{item.text}}</div>
             </div>
@@ -80,14 +80,9 @@ export default class Home extends MyPage {
             display: block;
         }
         .Item {
-            background: white;
-            font-size: 14px;
-            padding: 10px 16px;
-            box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.1);
-            border-radius: 6px;
-            height: 60px;
             overflow: hidden;
             position: relative;
+            height: 60px;
             .Big {
                 color: rgba($color: $colorPrimary, $alpha: 0.05);
                 font-size: 70px;
@@ -96,9 +91,9 @@ export default class Home extends MyPage {
                 left: 50%;
             }
             &.focus {
-                background: rgba($color: $colorPrimary, $alpha: 1);
-                box-shadow: 0 2px 6px 0 rgba($color: $colorPrimary, $alpha: 0.5);
-                color: white;
+                .Big {
+                    color: rgba($color: white, $alpha: 0.05);
+                }
             }
         }
     }

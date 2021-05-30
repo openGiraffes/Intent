@@ -1,8 +1,12 @@
 <template>
     <Page class="HttpProxy" :options="mPageOptions">
-        <div class="flex-v wh-100">
-            <div class="SelectWifi " v-focusable @click="onClick_SelectWifi">选择Wifi:{{mWifi}}</div>
-            <div ref="AA"></div>
+        <div class="flex-v wh-100 scroll-y" ref="Items">
+            <Input v-focusable :value="mWifi && mWifi.ssid"
+                label="WIFI" placeholder="请选择" disabled
+                @click.native="onClick_SelectWifi"></Input>
+            <!-- <div class="SelectWifi " v-focusable @click="onClick_SelectWifi">选择Wifi:{{mWifi}}</div> -->
+            <Input v-focusable v-model="mIpAndPort"
+                label="代理地址" placeholder="示例：127.0.0.1:8080"></Input>
         </div>
     </Page>
 </template>
@@ -36,7 +40,7 @@ export default class HttpProxy extends MyPage {
                 show: true,
                 options: {
                     get left() {
-                        return context.isVaild ? "设置" : "";
+                        return context.isVaild ? (context.mIpAndPort ? "设置代理" : "清空代理") : "";
                     },
                     center: "",
                     right: "返回",
@@ -46,14 +50,11 @@ export default class HttpProxy extends MyPage {
                                 if (!this.isVaild) {
                                     return;
                                 }
-
+                                this.onClick_Set();
                             },
                             softRight: () => {
                                 this.back();
                             },
-                            "A": () => {
-                                this.$tv.limitingEl = this.$refs.AA;
-                            }
                         }
                     }
                 },
@@ -62,26 +63,50 @@ export default class HttpProxy extends MyPage {
         }
     }
 
-    mWifi = "";
+    mWifi: any = null;
+    mIpAndPort = "";
 
     get isVaild() {
-        return !!this.mWifi;
+        return this.mWifi;
     }
 
     mounted() {
-
+        this.$tv.scrollEl = this.$refs.Items;
     }
 
     onClick_SelectWifi() {
-                                this.$tv.limitingEl = this.$refs.AA;
         this.startPageForResult({
             name: "SelectWifi",
         }, HttpProxy.REQUEST_CODE_SELECT_WIFI)
     }
 
+    onClick_Set() {
+        let http: any = null;
+        if (this.mIpAndPort) {
+            const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+            const b = reg.test(this.mIpAndPort);
+            if (b) {
+                let array = this.mIpAndPort.split(":");
+                http = {
+                    httpProxyHost: array[0],
+                    httpProxyPort: Number.parseInt(array[1]),
+                };
+            } else {
+                this.$prompt.showToast("输入格式有误");
+            }
+        }
+        let request = navigator.mozWifiManager.setHttpProxy(this.mWifi, http);
+        request.onsuccess = (result) => {
+            this.$prompt.showToast("设置成功");
+        };
+        request.onerror = (error) => {
+            this.$prompt.showToast("设置失败");
+        };
+    }
+
     onPageResult(requestCode: number, resultCode: number, data: any) {
         this.$super.onPageResult(requestCode, resultCode, data);
-        console.log(requestCode, resultCode, data);
+        // console.log(requestCode, resultCode, data);
         if (resultCode != MyPage.RESULT_OK) {
             return;
         }
