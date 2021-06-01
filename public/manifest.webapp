@@ -1,7 +1,7 @@
 {
     "name": "Intent",
     "description": "快捷操作",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "origin": "app://intent.kaios.lcsunm.cc",
     "launch_path": "/index.html",
     "icons": {
@@ -17,6 +17,9 @@
         "statusbar": "overlap"
     },
     "permissions": {
-        "wifi-manage": {}
+        "wifi-manage": {},
+        "settings": { "access": "readwrite" },
+        "themeable": {},
+        "webapps-manage": {}
     }
 }

@@ -10,9 +10,14 @@ const routes: Array<RouteConfig> = [
         component: () => import("@/views/Home.vue")
     },
     {
-        path: '/Network',
-        name: 'Network',
-        component: () => import("@/views/network/NetworkIndex.vue"),
+        path: '/Display',
+        name: 'Display',
+        component: () => import("@/views/display/DisplayIndex.vue"),
+    },
+    {
+        path: '/Display/SelectTheme',
+        name: 'SelectTheme',
+        component: () => import("@/views/display/selecttheme/SelectTheme.vue"),
     },
     {
         path: '/Network/HttpProxy',
