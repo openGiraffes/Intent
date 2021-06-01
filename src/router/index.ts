@@ -20,6 +20,11 @@ const routes: Array<RouteConfig> = [
         component: () => import("@/views/display/selecttheme/SelectTheme.vue"),
     },
     {
+        path: '/Network',
+        name: 'Network',
+        component: () => import("@/views/network/NetworkIndex.vue"),
+    },
+    {
         path: '/Network/HttpProxy',
         name: 'HttpProxy',
         component: () => import("@/views/network/httpproxy/HttpProxy.vue"),
