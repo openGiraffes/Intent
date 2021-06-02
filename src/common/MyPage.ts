@@ -81,6 +81,15 @@ export default class MyPage extends Mixins(Vue, Loading) {
         this.mScrollableEls = null;
     }
 
+    requestFocus(el?: Element) {
+        if (el) {
+            this.$tv.requestFocus(el);
+        } else {
+            let firstEl = this.$el.querySelector("[focusable]");
+            firstEl && this.$tv.requestFocus(firstEl);
+        }
+    }
+
 
     isSupportClose(): boolean {
         return true;
@@ -115,8 +124,7 @@ export default class MyPage extends Mixins(Vue, Loading) {
         this.$tv.limitingEl = this.$el;
         if (!fromBack) {
             this.$nextTick(() => {
-                let el = this.$el.querySelector("[focusable]");
-                el && this.$tv.requestFocus(el);
+                this.requestFocus();
             })
         }
     }

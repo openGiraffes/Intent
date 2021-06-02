@@ -65,8 +65,6 @@ export default class SelectTheme extends MyPage {
         let request = lock.get("theme.selected");
         request.onsuccess = () => {
             this.mSelected = request.result["theme.selected"];
-            console.log(this.mSelected);
-
         };
     }
 
@@ -103,6 +101,9 @@ export default class SelectTheme extends MyPage {
                     manifestURL: o.manifestURL,
                     mozApp: o,
                 };
+            })
+            this.$nextTick(() => {
+                this.requestFocus();
             })
         };
         result.onerror = (error) => {
