@@ -1,6 +1,6 @@
 <template>
     <Page class="SelectTheme" :options="mPageOptions">
-        <div class="Items wh-100 scroll-y" ref="Items">
+        <div class="Items wh-100 scroll-y" ref="Items" v-keep-scroll>
             <div class="Item flex-h" v-focusable :selected="item.manifestURL == mSelected"
                 v-for="(item,index) in mItems" :key="index" ref="Item"
                 @click="onClick_Select(index)" @up="onUp(index)" @down="onDown(index)">
@@ -24,7 +24,7 @@ import R from "@/common/R";
 
 @Component
 export default class SelectTheme extends MyPage {
-    $refs!: {
+    declare $refs: {
         Items: Element;
         Item: Element[];
     }

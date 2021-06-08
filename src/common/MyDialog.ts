@@ -1,8 +1,9 @@
 import { Vue, Component, Prop, Watch, PropSync, Emit } from "vue-property-decorator";
 import { Page } from '@/tool/Page';
 import R from "./R";
+import MyComponent from "./MyComponent";
 @Component
-export default class MyDialog extends Vue {
+export default class MyDialog extends MyComponent {
 
     @PropSync("show", { type: Boolean }) syncedShow!: boolean;
 
@@ -31,11 +32,19 @@ export default class MyDialog extends Vue {
     }
 
     push() {
-        this.$pager.currentPage().$page.pushDialog(this)
+        if (this.$page) {
+            this.$page.pushDialog(this);
+        } else {
+            this.$pager.pushDialog(this);
+        }
     }
 
     remove() {
-        this.$pager.currentPage().$page.removeDialog(this)
+        if (this.$page) {
+            this.$page.removeDialog(this);
+        } else {
+            this.$pager.removeDialog(this);
+        }
     }
 
     isSupportClose(): boolean {

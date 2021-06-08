@@ -4,7 +4,8 @@
         <div class="Content flex-v" :style="style_Content">
             <slot></slot>
         </div>
-        <div class="StatusBar w-100" :style="style_StatusBar"></div>
+        <div v-show="mOptions.statusBar.show" class="StatusBar w-100"
+            :style="style_StatusBar"></div>
         <ToolBar v-show="mOptions.toolBar.show" class="ToolBar w-100"
             :title="mOptions.toolBar.title" :style="style_ToolBar"></ToolBar>
         <NavigationBar v-show="mOptions.navigationBar.show" class="NavigationBar w-100"
@@ -20,6 +21,7 @@ import R from "@/common/R";
 
 export interface PageOptions {
     statusBar?: {
+        show?: boolean,
         padding?: boolean,
         backgroundColor?: string,
     },
@@ -62,6 +64,7 @@ export default class Page extends Vue {
     get mOptions() {
         return deepObjectMerge({
             statusBar: {
+                show: true,
                 padding: true,
             },
             toolBar: {
@@ -78,9 +81,9 @@ export default class Page extends Vue {
 
     get style_Content() {
         return {
-            top: ((this.mOptions.statusBar!.padding ? R.dimen.statusBarHeight : 0)
-                + ((this.mOptions.toolBar!.show && this.mOptions.toolBar!.padding) ? R.dimen.toolBarHeight : 0)) + "px",
-            bottom: ((this.mOptions.navigationBar!.show && this.mOptions.navigationBar!.padding) ? R.dimen.navigationBarHeight : 0) + "px",
+            top: ((this.mOptions.statusBar!.show && this.mOptions.statusBar!.padding ? R.dimen.statusBarHeight : 0)
+                + (this.mOptions.toolBar!.show && this.mOptions.toolBar!.padding ? R.dimen.toolBarHeight : 0)) + "px",
+            bottom: (this.mOptions.navigationBar!.show && this.mOptions.navigationBar!.padding ? R.dimen.navigationBarHeight : 0) + "px",
         }
     }
 

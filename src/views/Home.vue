@@ -1,7 +1,8 @@
 <template>
     <Page class="Home" :options="mPageOptions">
         <div class="Items wh-100 top scroll-y" ref="Items">
-            <div class="cell Item card flex-v bottom" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">
+            <div class="cell Item card flex-v bottom" v-focusable v-keep-scroll
+                v-for="(item,index) in mItems" :key="index" @click="item.click">
                 <div class="Big">{{item.text}}</div>
                 <div>{{item.text}}</div>
             </div>
@@ -17,7 +18,7 @@ import R from "@/common/R";
 
 @Component
 export default class Home extends MyPage {
-    $refs!: {
+    declare $refs: {
         Items: Element;
     }
 

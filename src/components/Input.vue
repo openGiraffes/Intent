@@ -1,6 +1,6 @@
 <template>
     <div class="Input flex-v" :input="!!value" @onFocus="onFocus" @onBlur="onBlur">
-        <input v-model="mValue" type="text" :placeholder="placeholder" ref="Input" />
+        <input v-model="mValue" :type="type" :placeholder="placeholder" ref="Input" />
         <div class="Label">{{label}}</div>
     </div>
 </template>
@@ -9,7 +9,7 @@
 import { Vue, Component, Prop, PropSync, Model, Watch } from "vue-property-decorator";
 @Component
 export default class Input extends Vue {
-    $refs!: {
+    declare $refs: {
         Input: HTMLInputElement;
     }
 
@@ -20,6 +20,8 @@ export default class Input extends Vue {
     @Prop() readonly label?: string;
 
     @Prop() readonly placeholder?: string;
+
+    @Prop({ default: "text" }) readonly type!: string;
 
     mValue = this.value;
 

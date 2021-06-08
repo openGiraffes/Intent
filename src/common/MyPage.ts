@@ -1,9 +1,13 @@
 import { Vue, Component, Prop, Watch, Mixins } from "vue-property-decorator";
 import { Page } from '@/tool/Page';
 import Loading from "@/mixins/Loading";
+import PageLifeCycle from "@/mixins/PageLifeCycle";
+import { PageRawLocation } from "@/tool/Pager";
+
 @Component
-export default class MyPage extends Mixins(Vue, Loading) {
-    $refs!: any;
+export default class MyPage extends Mixins(Vue, Loading, PageLifeCycle) {
+
+    declare $refs: any;
 
     static RESULT_OK = -1;
     static RESULT_CANCEL = 0;
@@ -14,72 +18,12 @@ export default class MyPage extends Mixins(Vue, Loading) {
         return this.__page;
     }
 
-    isActivated = false;
-
-    private mScrollableEls?: {
-        x: { el: Element, value: number }[],
-        y: { el: Element, value: number }[],
-    } | null;
-
     created() {
-
         if (!this.__page) {
             this.__page = new Page(this);
         }
     }
 
-    mounted() {
-        this.onStart();
-        this.isActivated = true;
-    }
-
-    destroyed() {
-        // this.$tv.resetLimitingEl();
-    }
-
-    activated() {
-        this.onResume();
-        if (this.isActivated) {
-            return;
-        }
-        this.isActivated = true;
-    }
-
-    deactivated() {
-        this.isActivated = false;
-    }
-
-    saveScrollableEls() {
-        let x = this.$el.getElementsByClassName("scroll-x");
-        let xEls: { el: Element, value: number }[] = [];
-        for (let i = 0; i < x.length; i++) {
-            const element = x[i];
-            xEls.push({ el: element, value: element.scrollLeft });
-        }
-        let y = this.$el.getElementsByClassName("scroll-y");
-        let yEls: { el: Element, value: number }[] = [];
-        for (let i = 0; i < y.length; i++) {
-            const element = y[i];
-            yEls.push({ el: element, value: element.scrollTop });
-        }
-        this.mScrollableEls = {
-            x: xEls,
-            y: yEls,
-        }
-    }
-
-    loadScrollableEls() {
-        if (!this.mScrollableEls) {
-            return;
-        }
-        this.mScrollableEls.x.forEach(item => {
-            item.el && (item.el.scrollLeft = item.value);
-        });
-        this.mScrollableEls.y.forEach(item => {
-            item.el && (item.el.scrollTop = item.value);
-        });
-        this.mScrollableEls = null;
-    }
 
     requestFocus(el?: Element) {
         if (el) {
@@ -109,37 +53,36 @@ export default class MyPage extends Mixins(Vue, Loading) {
         this.onBackPressed();
     }
 
-    close() {
-        this.__page.close();
+    close(back = true) {
+        this.__page.close(back);
     }
 
     reload() {
         this.__page.reload();
     }
 
-    onStart(fromBack = false) {
-        // console.log(this.$page.name, "onStart", fromBack);
-        this.__page.onStart(fromBack);
-        this.loadScrollableEls();
+    protected _onStart(restart = false) {
+        // console.log("onStart", this.$vnode.tag, restart);
+        // fromBack && this.__page.reload();
+        this.__page.onStart(restart);
+        this.onStart();
         this.$tv.limitingEl = this.$el;
-        if (!fromBack) {
+        if (!restart) {
             this.$nextTick(() => {
                 this.requestFocus();
             })
         }
     }
 
-    onResume() {
+    protected _onStop() {
+        this.onStop();
     }
 
-    onPause() {
+    startPage(config: PageRawLocation) {
+        this.$pager.navigateTo(config);
     }
 
-    onStop() {
-        this.saveScrollableEls();
-    }
-
-    startPageForResult(config: any, requestCode: number,) {
+    startPageForResult(config: PageRawLocation, requestCode: number,) {
         this.$page.startPageForResult(config, requestCode);
     }
 

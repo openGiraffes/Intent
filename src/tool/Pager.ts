@@ -4,6 +4,7 @@ import { RouteConfig, Route, NavigationGuard, NavigationGuardNext } from 'vue-ro
 import MyDialog from '@/common/MyDialog';
 import { Page } from '@/tool/Page';
 import MyPage from '@/common/MyPage';
+import { VNode } from 'vue';
 
 interface PageResult {
     requestPageId: string,
@@ -12,16 +13,29 @@ interface PageResult {
     data?: any,
 }
 
+export interface PageLocation {
+    name?: string
+    path?: string
+    hash?: string
+    params?: Record<string, any>;
+    tempParams?: Record<string, any>;
+    append?: boolean
+    replace?: boolean
+}
+
+export type PageRawLocation = string | PageLocation;
+
 @Component
 export default class Pager extends Vue {
 
     App: any;
     KeepAlive = true;
     PageResults: PageResult[] = []
+    private Dialogs: Record<string, MyDialog> = {};
 
-    navigateTo(nameOrConfig: string | Object, params?: any) {
+    navigateTo(nameOrConfig: PageRawLocation, params?: any) {
         let config: any = {};
-        let requestPageId:string | null = null;
+        let requestPageId: string | null = null;
         if (typeof (nameOrConfig) == 'string') {
             config['name'] = nameOrConfig;
         } else {
@@ -55,20 +69,48 @@ export default class Pager extends Vue {
     }
 
 
-    close(id: string) {
+    close(id: string, back: boolean) {
         if (!this.App) {
             return;
         }
-        window.history.go(-1);
-        this.App.destroyPage(id);
+        back && window.history.go(-1);
+        this.destroyPage(id);
     }
 
-    reload(vueUid = 0) {
-        this.$children[0]["reloadCurrentPage"]();
+    reload(id: string) {
+        this.destroyPage(id);
+        this.navigateTo("Reload");
     }
 
-    currentPage(): MyPage {
-        return this.App.currentPage();
+    pushDialog(vue: MyDialog) {
+        this.currentPage()?.onPause();
+        this.Dialogs[vue._uid] = vue;
+    }
+
+    removeDialog(vue: MyDialog) {
+        delete this.Dialogs[vue._uid];
+        this.currentPage()?.onResume();
+    }
+
+    currentPage(): MyPage | null {
+        let router = this.App?.$refs.RouterView;
+        if (!router) {
+            // throw new Error("页面异常");
+            return null;
+        }
+        let cache: { [key: string]: VNode } = router.$options.parent!.cache;
+        let keys: string[] = router.$options.parent.keys;
+        return cache[keys[keys.length - 1]].componentInstance as MyPage;
+    }
+
+    destroyPage(id: string) {
+        let router = this.App.$refs.RouterView;
+        let cache: { [key: string]: VNode } = router.$options.parent.cache;
+        let keys: string[] = router.$options.parent.keys;
+        keys.splice(keys.indexOf(id), 1);
+        let vue = cache[id].componentInstance;
+        vue && vue.$destroy();
+        delete cache[id];
     }
 
 }

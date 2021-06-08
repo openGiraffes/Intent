@@ -35,3 +35,9 @@ declare interface Navigator {
     };
     mozSettings: SettingsManager;
 };
+
+declare interface Window {
+    KaiAd: any;
+    MozActivity: any;
+    Kaipay: any;
+};

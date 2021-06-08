@@ -1,7 +1,8 @@
 <template>
-    <div id="app" v-if="$pager.KeepAlive ? mPage : true">
+    <div id="app">
         <keep-alive v-if="$pager.KeepAlive">
-            <router-view :key="mPage.id" ref="RouterView" />
+            <!-- <router-view :key="mPage.id" ref="RouterView" /> -->
+            <router-view ref="RouterView" />
         </keep-alive>
         <router-view v-else ref="RouterView" />
     </div>
@@ -9,60 +10,15 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { VNode } from 'vue';
-import MyPage from "@/common/MyPage";
-
-interface PageConfig {
-    id: string;
-    name: string;
-}
 
 @Component
 export default class App extends Vue {
-    $refs!: {
+    declare $refs: {
         RouterView: any;
     }
 
     mVersionCode = versionCode;
 
-    mPageFlag = 0;
-    mPages: PageConfig[] = [];
-    mPage: PageConfig | null = null;
-
-    @Watch("$route.name")
-    private __onChange_Route_Name(value: string | null) {
-        if (!value) {
-            return;
-        }
-        let findIndex = this.mPages.findIndex(o => o.name === value);
-        if (findIndex !== -1) {
-            let page = this.mPages[findIndex];
-            let pageInstance = this.getPage(page.id);
-            pageInstance.onStart(true);
-            this.mPage = page;
-            return;
-        }
-
-        if (this.$refs.RouterView && this.mPages.length) {
-            this.currentPage().onStop();
-        }
-
-        let pageId = this.$route.query.pageId;
-        if (!pageId) {
-            pageId = this.createPageId() + "";
-            this.$route.query.pageId = pageId;
-        }
-        this.mPage = {
-            name: value,
-            id: pageId as string,
-        };
-        this.mPages.push(this.mPage);
-    }
-
-    createPageId() {
-        this.mPageFlag += 10000;
-        return this.mPageFlag;
-    }
 
     created() {
         this.$tv.distanceToCenter = true;
@@ -78,30 +34,10 @@ export default class App extends Vue {
 
     destroyed() {
         this.$pager.App = null;
+        this.$tv.resetScrollEl();
+        this.$tv.resetFindFocusType(); //this.$tv.findFocusType  = 1;
     }
 
-    destroyPage(id: string) {
-        if (!this.$pager.KeepAlive) {
-            return;
-        }
-        let cache: { [key: string]: VNode } = this.$refs.RouterView.$options.parent.cache;
-        let keys: string[] = this.$refs.RouterView.$options.parent.keys;
-        keys.splice(keys.indexOf(id), 1);
-        let vue = cache[id].componentInstance;
-        vue && vue.$destroy();
-        delete cache[id];
-        this.mPages.splice(this.mPages.findIndex(o => o.id === id), 1);
-    }
-
-    private getPage(id: string) {
-        let cache: { [key: string]: VNode } = this.$refs.RouterView.$options.parent.cache;
-        let vue = cache[id].componentInstance as MyPage;
-        return vue;
-    }
-
-    currentPage() {
-        return this.getPage(this.mPages[this.mPages.length - 1].id);
-    }
 }
 </script>
 

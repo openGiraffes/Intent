@@ -1,6 +1,6 @@
 <template>
     <Page class="DisplayIndex" :options="mPageOptions">
-        <div class="Items wh-100 scroll-y" ref="Items">
+        <div class="Items wh-100 scroll-y" ref="Items" v-keep-scroll>
             <div class="Item card" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">{{item.text}}</div>
         </div>
     </Page>
@@ -14,7 +14,7 @@ import R from "@/common/R";
 
 @Component
 export default class DisplayIndex extends MyPage {
-    $refs!: {
+    declare $refs: {
         Items: Element;
     }
 

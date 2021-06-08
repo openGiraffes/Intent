@@ -2,6 +2,7 @@ import MyPage from "@/common/MyPage";
 import MyDialog from '@/common/MyDialog';
 import MyFragment from '@/common/MyFragment';
 import Vue from "vue";
+import { PageRawLocation } from "./Pager";
 
 export class Page {
     private mVue: MyPage;
@@ -16,10 +17,6 @@ export class Page {
 
     private fragments: Record<string, MyFragment> = {}
 
-    pageRequestData = {
-        resultCode: MyPage.RESULT_CANCEL,
-        data: {},
-    };
     requestPageId?: string;
 
     constructor(vue: MyPage) {
@@ -32,13 +29,13 @@ export class Page {
         this.name = context.$route.name || "";
         this.meta = context.$route.meta;
 
+        this.id = context.$vnode.tag!.split("-")[2];
+
         if (context.$route.query) {
             if (context.$route.query.params) {
                 this.params = JSON.parse((context.$route.query as any).params);
             }
-            this.id = context.$route.query.pageId as string;
             this.requestPageId = context.$route.query.requestPageId as string;
-
         }
 
         if (context.$route.params) {
@@ -87,22 +84,11 @@ export class Page {
     }
 
     reload() {
-        this.mVue.$pager.reload(this.mVue._uid);
+        this.mVue.$pager.reload(this.id!);
     }
 
-    close() {
-        this._close();
-    }
-
-    private _close() {
-        if (this.requestPageId) {
-            let find = this.mVue.$pager.PageResults.find(o => o.requestPageId == this.requestPageId);
-            if (find) {
-                find.resultCode = this.pageRequestData.resultCode;
-                find.data = this.pageRequestData.data;
-            }
-        }
-        this.mVue.$pager.close(this.id!);
+    close(back: boolean) {
+        this.mVue.$pager.close(this.id!, back);
     }
 
 
@@ -115,8 +101,8 @@ export class Page {
         delete this.fragments[vue._uid];
     }
 
-    onStart(fromBack: boolean) {
-        if (fromBack) {
+    onStart(restart: boolean) {
+        if (restart) {
             let findIndex = this.mVue.$pager.PageResults.findIndex(o => o.requestPageId == this.id);
             if (findIndex !== -1) {
                 let data = this.mVue.$pager.PageResults.splice(findIndex, 1)[0];
@@ -125,17 +111,26 @@ export class Page {
         }
     }
 
-    startPageForResult(config: any, requestCode: number,) {
+    startPageForResult(config: PageRawLocation, requestCode: number,) {
         this.mVue.$pager.PageResults.push({
             requestCode: requestCode,
             requestPageId: this.id!,
+            resultCode: MyPage.RESULT_CANCEL,
+            data: {},
         });
-        this.mVue.$pager.navigateTo(Object.assign({ requestPageId: this.id }, config));
+        this.mVue.$pager.navigateTo(typeof config == "string"
+            ? { requestPageId: this.id, name: config }
+            : Object.assign({ requestPageId: this.id }, config));
     }
 
     setResult(resultCode: number, data: any = {}) {
-        this.pageRequestData.resultCode = resultCode;
-        this.pageRequestData.data = data;
+        if (this.requestPageId) {
+            let find = this.mVue.$pager.PageResults.find(o => o.requestPageId == this.requestPageId);
+            if (find) {
+                find.resultCode = resultCode;
+                find.data = data;
+            }
+        }
     }
 
     onPageResult(requestCode: number, resultCode: number, data: any) {

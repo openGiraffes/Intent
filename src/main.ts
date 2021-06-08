@@ -30,7 +30,11 @@ Vue.prototype.$ct = new CommonUtils(vue);
 Pager["options"].router = vue.$router;
 Vue.prototype.$pager = new Pager();
 
-vue.$mount('#app')
+const KaiOS = navigator.userAgent.indexOf("KAIOS") != -1 && window.Kaipay;
+
+if (KaiOS || isDev) {
+    vue.$mount('#app');
+}
 
 declare module "vue/types/vue" {
     interface Vue {

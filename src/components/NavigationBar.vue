@@ -140,14 +140,14 @@ export default class NavigationBar extends Vue {
         }
         switch (e.key) {
             case "SoftLeft":
-            case "Q":
+            case "F1":
                 event.softLeft?.();
                 break;
             case "Enter":
                 event.enter?.();
                 break;
             case "SoftRight":
-            case "E":
+            case "F2":
                 event.softRight?.();
                 break;
             case "ArrowUp":

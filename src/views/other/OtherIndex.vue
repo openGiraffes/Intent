@@ -1,6 +1,6 @@
 <template>
     <Page class="OtherIndex" :options="mPageOptions">
-        <div class="Items wh-100 scroll-y" ref="Items">
+        <div class="Items wh-100 scroll-y" ref="Items" v-keep-scroll>
             <div class="Item card" v-focusable v-for="(item,index) in mItems" :key="index" @click="item.click">{{item.text}}</div>
         </div>
     </Page>
@@ -14,7 +14,7 @@ import R from "@/common/R";
 
 @Component
 export default class OtherIndex extends MyPage {
-    $refs!: {
+    declare $refs: {
         Items: Element;
     }
 
@@ -47,7 +47,7 @@ export default class OtherIndex extends MyPage {
             text: "开发者选项",
             click: () => {
                 if (window.MozActivity) {
-                    let result = new MozActivity({
+                    let result = new window.MozActivity({
                         name: "configure",
                         data: { target: "device", section: "developer" }
                     })

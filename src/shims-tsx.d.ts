@@ -14,9 +14,6 @@ declare global {
 
     declare const isDev: boolean
     declare const versionCode: string
-
-    declare var MozActivity: any;
-
     
     interface String {
         replaceAll(s1: string, s2: string): string;

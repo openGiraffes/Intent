@@ -1,11 +1,11 @@
 <template>
     <Page class="HttpProxy" :options="mPageOptions">
-        <div class="flex-v wh-100 scroll-y" ref="Items">
+        <div class="flex-v wh-100 scroll-y" ref="Items" v-keep-scroll>
             <Input v-focusable :value="mWifi && mWifi.ssid"
                 label="WIFI" placeholder="请选择" disabled
                 @click.native="onClick_SelectWifi"></Input>
             <!-- <div class="SelectWifi " v-focusable @click="onClick_SelectWifi">选择Wifi:{{mWifi}}</div> -->
-            <Input v-focusable v-model="mIpAndPort" ref="IpAndPort"
+            <Input v-focusable v-model="mIpAndPort" ref="IpAndPort" type="text"
                 label="代理地址" placeholder="xxx.xxx.xxx.xxx:xxxx"
                 @click.native="onClick_IpAndPort" @onFocus.native="onFocus('IpAndPort')" @onBlur.native="onBlur('IpAndPort')"></Input>
         </div>
@@ -25,7 +25,7 @@ export default class HttpProxy extends MyPage {
 
     static REQUEST_CODE_SELECT_WIFI = 1;
 
-    $refs!: {
+    declare $refs: {
         IpAndPort: Vue;
         Items: Element;
     }
