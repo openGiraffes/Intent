@@ -8,6 +8,7 @@ import Prompt from "@/tool/Prompt";
 import "@/assets/css/styles.scss";
 import "@/common/Common";
 import "@/plugins";
+import i18n from "@/plugins/vue-i18n";
 
 import CommonUtils from "@/tool/Utils";
 import { EventBus } from "@/tool/EventBus";
@@ -16,25 +17,29 @@ import Pager from "@/tool/Pager";
 Vue.config.productionTip = false
 
 
+i18n.init((i18n) => {
 
-const vue = new Vue({
-    router,
-    store,
-    render: h => h(App)
-});
+    const vue = new Vue({
+        router,
+        store,
+        i18n,
+        render: h => h(App)
+    });
 
 
-Vue.prototype.$prompt = new Prompt();
-Vue.prototype.$bus = EventBus;
-Vue.prototype.$ct = new CommonUtils(vue);
-Pager["options"].router = vue.$router;
-Vue.prototype.$pager = new Pager();
+    Vue.prototype.$prompt = new Prompt();
+    Vue.prototype.$bus = EventBus;
+    Vue.prototype.$ct = new CommonUtils(vue);
+    Pager["options"].router = vue.$router;
+    Vue.prototype.$pager = new Pager();
 
-const KaiOS = navigator.userAgent.indexOf("KAIOS") != -1 && window.Kaipay;
+    const KaiOS = navigator.userAgent.indexOf("KAIOS") != -1 && window.Kaipay;
 
-if (KaiOS || isDev) {
-    vue.$mount('#app');
-}
+    if (KaiOS || isDev) {
+        vue.$mount('#app');
+    }
+    
+})
 
 declare module "vue/types/vue" {
     interface Vue {

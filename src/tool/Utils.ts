@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { i18n } from "@/plugins/vue-i18n";
 
 export const uuid = () => {
     var s: any[] = [];
@@ -101,16 +102,16 @@ export const duration = ({ startTime, endTime, semantic = false, days = true, ho
     if (semantic) {
         let str = "";
         if (days && daysValue > 0) {
-            str += daysValue + "天";
+            str += daysValue + i18n.t("days").toString();
         }
         if (hours && hoursValue > 0) {
-            str += hoursValue + "时";
+            str += hoursValue + i18n.t("hours").toString();
         }
         if (minutes && minutesValue > 0) {
-            str += minutesValue + "分";
+            str += minutesValue + i18n.t("minutes").toString();
         }
         if (seconds && secondsValue > 0) {
-            str += secondsValue + "秒";
+            str += secondsValue + i18n.t("seconds").toString();
         }
         return str;
     }
@@ -166,7 +167,7 @@ export default class {
     yesterday = yesterday;
     age = age;
     duration = duration;
-    formatNumber= formatNumber;
+    formatNumber = formatNumber;
 
     private mTimeoutMap: Record<number, any> = {};
 

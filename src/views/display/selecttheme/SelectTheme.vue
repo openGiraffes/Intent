@@ -1,7 +1,7 @@
 <template>
     <Page class="SelectTheme" :options="mPageOptions">
         <div class="Items wh-100 scroll-y" ref="Items" v-keep-scroll>
-            <div class="Item flex-h" v-focusable :selected="item.manifestURL == mSelected"
+            <div class="Item flex-h" v-focusable
                 v-for="(item,index) in mItems" :key="index" ref="Item"
                 @click="onClick_Select(index)" @up="onUp(index)" @down="onDown(index)">
                 <img class="Icon" :src="item.icon" />
@@ -11,6 +11,7 @@
                     <div class="Description">{{item.description}}</div>
                     <div v-if="item.version" class="Type">{{"v"+item.version}}</div>
                 </div>
+                <div v-if="item.manifestURL == mSelected" class="Selected">{{$t("selected")}}</div>
             </div>
         </div>
     </Page>
@@ -35,17 +36,17 @@ export default class SelectTheme extends MyPage {
         let context = this;
         return {
             toolBar: {
-                title: "选择主题",
+                title: context.$t("select-theme") as string,
             },
             navigationBar: {
                 show: true,
                 options: {
-                    center: "选择",
-                    right: "返回",
+                    center: context.$t("select"),
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softRight: () => {
-                                this.back();
+                                context.back();
                             },
                         }
                     }
@@ -107,7 +108,7 @@ export default class SelectTheme extends MyPage {
             })
         };
         result.onerror = (error) => {
-            this.$prompt.showToast("加载失败" + error);
+            this.$prompt.showToast(this.$t("failed-to-load") + error);
         };
     }
 
@@ -118,7 +119,7 @@ export default class SelectTheme extends MyPage {
             "theme.selected": item,
         });
         this.mSelected = item;
-        this.$prompt.showToast("已设置");
+        this.$prompt.showToast(this.$t("has-set"));
     }
 
     onUp(index: number) {
@@ -154,19 +155,6 @@ export default class SelectTheme extends MyPage {
             background: white;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
-            &[selected] {
-                &::after {
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                    content: "已选择";
-                    font-size: 10px;
-                    padding: 2px 7px;
-                    border-bottom-left-radius: 5px;
-                    background: rgba($color: $colorPrimary, $alpha: 1);
-                    color: white;
-                }
-            }
             &.focus {
                 background: rgba(0, 0, 0, 0.1);
             }
@@ -195,6 +183,16 @@ export default class SelectTheme extends MyPage {
             .Type {
                 color: rgba(0, 0, 0, 0.3);
                 font-size: 12px;
+            }
+            .Selected {
+                position: absolute;
+                right: 0;
+                top: 0;
+                font-size: 10px;
+                padding: 2px 7px;
+                border-bottom-left-radius: 5px;
+                background: rgba($color: $colorPrimary, $alpha: 1);
+                color: white;
             }
         }
     }

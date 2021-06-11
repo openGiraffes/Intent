@@ -24,16 +24,16 @@ export default class DisplayIndex extends MyPage {
         let context = this;
         return {
             toolBar: {
-                title: "显示",
+                title: context.$t("display") as string,
             },
             navigationBar: {
-                show:true,
+                show: true,
                 options: {
-                    right: "返回",
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softRight: () => {
-                                this.back();
+                                context.back();
                             },
                         }
                     }
@@ -44,9 +44,9 @@ export default class DisplayIndex extends MyPage {
 
     mItems = [
         {
-            text: "选择主题",
+            text: this.$t("select-theme"),
             click: () => {
-                this.$pager.navigateTo("SelectTheme");
+                this.startPage("SelectTheme");
             }
         },
     ]

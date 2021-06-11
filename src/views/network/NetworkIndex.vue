@@ -24,16 +24,16 @@ export default class NetworkIndex extends MyPage {
         let context = this;
         return {
             toolBar: {
-                title: "网络",
+                title: context.$t("network") as string,
             },
             navigationBar: {
                 show:true,
                 options: {
-                    right: "返回",
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softRight: () => {
-                                this.back();
+                                context.back();
                             },
                         }
                     }
@@ -44,9 +44,9 @@ export default class NetworkIndex extends MyPage {
 
     mItems = [
         {
-            text: "设置HTTP代理",
+            text: this.$t("set-http-proxy"),
             click: () => {
-                this.$pager.navigateTo("HttpProxy");
+                this.startPage("HttpProxy");
             }
         },
     ]

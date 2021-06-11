@@ -24,16 +24,16 @@ export default class OtherIndex extends MyPage {
         let context = this;
         return {
             toolBar: {
-                title: "其他",
+                title: context.$t("other") as string,
             },
             navigationBar: {
                 show:true,
                 options: {
-                    right: "返回",
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softRight: () => {
-                                this.back();
+                                context.back();
                             },
                         }
                     }
@@ -44,7 +44,7 @@ export default class OtherIndex extends MyPage {
 
     mItems = [
         {
-            text: "开发者选项",
+            text: this.$t("developer-options"),
             click: () => {
                 if (window.MozActivity) {
                     let result = new window.MozActivity({

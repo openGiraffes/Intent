@@ -1,0 +1,38 @@
+{
+    "back": "返回",
+
+    "display": "显示",
+    "network": "网络",
+    "other": "其他",
+
+    "days": "天",
+    "hours": "时",
+    "minutes": "分",
+    "seconds": "秒",
+    
+    "select-theme": "选择主题",
+    "select": "选择",
+
+    "failed-to-load": "加载失败",
+    "set": "设置",
+    "has-set": "已设置",
+    "selected": "已选择",
+    
+    "set-http-proxy": "设置HTTP代理",
+    "please-select": "请选择",
+    "wifi": "WIFI",
+    "proxy-address": "代理地址",
+    "select-known-wifi" : "选择WIFI（已知网络）",
+    "get-failed" : "获取失败",
+    "additional-separator" : "追加符号",
+    "set-proxy": "设置代理",
+    "clear-proxy": "清空代理",
+    "setup-successful": "设置成功",
+    "setup-failed": "设置失败",
+    "invalid-input-format":"输入格式有误",
+
+    "developer-options": "开发者选项",
+
+    
+    "-": "-"
+}

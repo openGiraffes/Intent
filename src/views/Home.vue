@@ -46,21 +46,21 @@ export default class Home extends MyPage {
 
     mItems = [
         {
-            text: "显示",
+            text: this.$t("display"),
             click: () => {
-                this.$pager.navigateTo("Display");
+                this.startPage("Display");
             }
         },
         {
-            text: "网络",
+            text: this.$t("network"),
             click: () => {
-                this.$pager.navigateTo("Network");
+                this.startPage("Network");
             }
         },
         {
-            text: "其他",
+            text: this.$t("other"),
             click: () => {
-                this.$pager.navigateTo("Other");
+                this.startPage("Other");
             }
         },
     ]

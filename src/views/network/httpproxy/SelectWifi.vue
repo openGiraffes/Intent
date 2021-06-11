@@ -23,7 +23,7 @@ export default class SelectWifi extends MyPage {
             },
             toolBar: {
                 show: true,
-                title: "选择WIFI（已知网络）",
+                title: context.$t("select-known-wifi") as string,
                 padding: true,
             },
             navigationBar: {
@@ -31,23 +31,23 @@ export default class SelectWifi extends MyPage {
                 options: {
                     left: "",
                     get center() {
-                        return context.mCurrent ? "选择" : "";
+                        return context.mCurrent ? context.$t("select") : "";
                     },
-                    right: "返回",
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softLeft: () => {
                             },
                             softRight: () => {
                                 // this.setResult(MyPage.RESULT_OK, { wifi: "aaaaa" });
-                                this.back();
+                                context.back();
                             },
                             enter: () => {
-                                if (!this.mCurrent) {
+                                if (!context.mCurrent) {
                                     return;
                                 }
-                                this.setResult(MyPage.RESULT_OK, { wifi: this.mCurrent });
-                                this.back();
+                                context.setResult(MyPage.RESULT_OK, { wifi: context.mCurrent });
+                                context.back();
                             }
                         }
                     }
@@ -72,7 +72,7 @@ export default class SelectWifi extends MyPage {
             this.mItems = result.target.result;//.find((o) => o.ssid == "LC");
         };
         request.onerror = (error) => {
-            this.$prompt.showToast("获取失败");
+            this.$prompt.showToast(this.$t("get-failed"));
         };
     }
 

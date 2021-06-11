@@ -2,11 +2,10 @@
     <Page class="HttpProxy" :options="mPageOptions">
         <div class="flex-v wh-100 scroll-y" ref="Items" v-keep-scroll>
             <Input v-focusable :value="mWifi && mWifi.ssid"
-                label="WIFI" placeholder="请选择" disabled
+                :label="$t('wifi')" :placeholder="$t('please-select')" disabled
                 @click.native="onClick_SelectWifi"></Input>
-            <!-- <div class="SelectWifi " v-focusable @click="onClick_SelectWifi">选择Wifi:{{mWifi}}</div> -->
             <Input v-focusable v-model="mIpAndPort" ref="IpAndPort" type="text"
-                label="代理地址" placeholder="xxx.xxx.xxx.xxx:xxxx"
+                :label="$t('proxy-address')" placeholder="xxx.xxx.xxx.xxx:xxxx"
                 @click.native="onClick_IpAndPort" @onFocus.native="onFocus('IpAndPort')" @onBlur.native="onBlur('IpAndPort')"></Input>
         </div>
     </Page>
@@ -30,7 +29,7 @@ export default class HttpProxy extends MyPage {
         Items: Element;
     }
 
-    @Prop({ default: "标题" }) readonly title!: string;
+    @Prop({ default: "title" }) readonly title!: string;
 
     mPageOptions = this.createPageOptions();
     createPageOptions(): PageOptions {
@@ -41,29 +40,29 @@ export default class HttpProxy extends MyPage {
             },
             toolBar: {
                 show: true,
-                title: "设置HTTP代理",
+                title: context.$t("set-http-proxy") as string,
                 padding: true,
             },
             navigationBar: {
                 show: true,
                 options: {
                     get left() {
-                        return context.isVaild ? (context.mIpAndPort ? "设置代理" : "清空代理") : "";
+                        return context.isVaild ? (context.mIpAndPort ? context.$t("set-proxy") : context.$t("clear-proxy")) : "";
                     },
                     get center() {
-                        return context.mFocusedName == "IpAndPort" ? "追加符号" : "";
+                        return context.mFocusedName == "IpAndPort" ? context.$t("additional-separator") : "";
                     },
-                    right: "返回",
+                    right: context.$t("back"),
                     on: {
                         keyPress: {
                             softLeft: () => {
-                                if (!this.isVaild) {
+                                if (!context.isVaild) {
                                     return;
                                 }
-                                this.onClick_Set();
+                                context.onClick_Set();
                             },
                             softRight: () => {
-                                this.back();
+                                context.back();
                             },
                         }
                     }
@@ -121,15 +120,15 @@ export default class HttpProxy extends MyPage {
                     httpProxyPort: Number.parseInt(array[1]),
                 };
             } else {
-                this.$prompt.showToast("输入格式有误");
+                this.$prompt.showToast(this.$t("invalid-input-format"));
             }
         }
         let request = navigator.mozWifiManager.setHttpProxy(this.mWifi, http);
         request.onsuccess = (result) => {
-            this.$prompt.showToast("设置成功");
+            this.$prompt.showToast(this.$t("setup-successful"));
         };
         request.onerror = (error) => {
-            this.$prompt.showToast("设置失败");
+            this.$prompt.showToast(this.$t("setup-failed"));
         };
     }
 
