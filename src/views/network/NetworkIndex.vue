@@ -51,7 +51,8 @@ export default class NetworkIndex extends MyPage {
         },
     ]
 
-    mounted() {
+    onStart() {
+        this.$super.onStart();
         this.$tv.scrollEl = this.$refs.Items;
     }
 

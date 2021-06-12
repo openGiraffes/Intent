@@ -80,7 +80,8 @@ export default class HttpProxy extends MyPage {
         return this.mWifi;
     }
 
-    mounted() {
+    onStart() {
+        this.$super.onStart();
         this.$tv.scrollEl = this.$refs.Items;
     }
 

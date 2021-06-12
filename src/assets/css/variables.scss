@@ -1,4 +1,5 @@
 $colorPrimary: #6f02b5;
+$colorPrimaryDark: #55008a;
 $colorAccent: rgb(249, 143, 14);
 
 $dimenStatusBarHeight: 26px;
@@ -8,6 +9,7 @@ $dimenNavigationBarHeight: 18px;
 :export {
     color: {
         primary: $colorPrimary;
+        primaryDark: $colorPrimaryDark;
         accent: $colorAccent;
     }
 }

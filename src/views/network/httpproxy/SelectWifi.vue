@@ -62,8 +62,12 @@ export default class SelectWifi extends MyPage {
     mCurrent: any | null = null;
 
     mounted() {
-        this.$tv.scrollEl = this.$refs.Items;
         this.loadData();
+    }
+
+    onStart() {
+        this.$super.onStart();
+        this.$tv.scrollEl = this.$refs.Items;
     }
 
     loadData() {

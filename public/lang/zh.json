@@ -1,5 +1,9 @@
 {
     "back": "返回",
+    "about": "关于",
+    "version-name": "版本",
+    "build-time": "编译时间",
+    "quote": "引用",
 
     "display": "显示",
     "network": "网络",

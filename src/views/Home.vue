@@ -63,9 +63,16 @@ export default class Home extends MyPage {
                 this.startPage("Other");
             }
         },
+        {
+            text: this.$t("about"),
+            click: () => {
+                this.startPage("About");
+            }
+        },
     ]
 
-    mounted() {
+    onStart() {
+        this.$super.onStart();
         this.$tv.scrollEl = this.$refs.Items;
     }
 
@@ -77,13 +84,13 @@ export default class Home extends MyPage {
     position: relative;
     background: rgba($color: #eeeeee, $alpha: 1);
     .Items {
-        padding: calc(10px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px 0 16px;
+        padding: calc(12px + #{$dimenStatusBarHeight} + #{$dimenToolBarHeight}) 16px 0 16px;
         // padding: 10px 16px;
         position: relative;
-        @include columnsFlex(2, 7px, 7px);
+        @include columnsFlex(2, 10px, 10px);
         &::after {
             content: "";
-            height: calc(10px + #{$dimenNavigationBarHeight});
+            height: calc(12px + #{$dimenNavigationBarHeight});
             display: block;
         }
         .Item {

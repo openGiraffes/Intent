@@ -60,13 +60,18 @@ export default class SelectTheme extends MyPage {
     mSelected = "";
 
     mounted() {
-        this.$tv.scrollEl = this.$refs.Items;
         this.loadData_Apps();
         let lock = navigator.mozSettings.createLock()
         let request = lock.get("theme.selected");
         request.onsuccess = () => {
             this.mSelected = request.result["theme.selected"];
         };
+    }
+
+
+    onStart() {
+        this.$super.onStart();
+        this.$tv.scrollEl = this.$refs.Items;
     }
 
 
@@ -146,17 +151,15 @@ export default class SelectTheme extends MyPage {
 <style lang="scss" scoped>
 .SelectTheme {
     position: relative;
-    background: rgba($color: #eeeeee, $alpha: 1);
     .Items {
         position: relative;
         .Item {
             font-size: 14px;
             padding: 5px 16px;
-            background: white;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
             &.focus {
-                background: rgba(0, 0, 0, 0.1);
+                background: rgba($color: $colorPrimary, $alpha: 0.1);
             }
             .Developer {
                 color: rgb(0, 162, 255);
