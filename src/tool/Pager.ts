@@ -105,12 +105,30 @@ export default class Pager extends Vue {
 
     destroyPage(id: string) {
         let router = this.App.$refs.RouterView;
+        if (!router) {
+            return;
+        }
         let cache: { [key: string]: VNode } = router.$options.parent.cache;
         let keys: string[] = router.$options.parent.keys;
         keys.splice(keys.indexOf(id), 1);
         let vue = cache[id].componentInstance;
         vue && vue.$destroy();
         delete cache[id];
+    }
+
+    destroyAllPage() {
+        let router = this.App.$refs.RouterView;
+        if (!router) {
+            return;
+        }
+        let cache: { [key: string]: VNode } = router.$options.parent.cache;
+        let keys: string[] = router.$options.parent.keys;
+        keys.forEach(id => {
+            keys.splice(keys.indexOf(id), 1);
+            let vue = cache[id].componentInstance;
+            vue && vue.$destroy();
+            delete cache[id];
+        });
     }
 
 }
