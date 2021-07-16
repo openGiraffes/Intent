@@ -4,6 +4,8 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class Prompt extends Vue {
 
+    mLoading: any;
+
 
     showToast(msg: string | any) {
         if (msg == undefined || msg == null) {
@@ -14,9 +16,33 @@ export default class Prompt extends Vue {
             propsData: { msg, },
         });
         com.$on("close", () => {
+            com.$destroy();
             create.remove();
         })
         com.$mount(create.layout);
+    }
+
+    showLoading(msg?: string | any) {
+        const create = this.createComponent(require("@/components/Loading.vue"));
+        const com = new create.component({
+            propsData: { msg, },
+        });
+        com.$on("close", () => {
+            com.$destroy();
+            create.remove();
+        })
+        com.$mount(create.layout);
+        this.mLoading = () => {
+            com.$destroy();
+            create.remove();
+        };
+    }
+
+    closeLoading() {
+        if (this.mLoading) {
+            this.mLoading();
+            this.mLoading = null;
+        }
     }
 
     private createComponent = (com: any) => {

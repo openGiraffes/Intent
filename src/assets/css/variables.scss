@@ -3,7 +3,7 @@ $colorPrimaryDark: #55008a;
 $colorAccent: rgb(249, 143, 14);
 
 $dimenStatusBarHeight: 26px;
-$dimenToolBarHeight: 36px;
+$dimenToolBarHeight: 26px;
 $dimenNavigationBarHeight: 18px;
 
 :export {
@@ -11,6 +11,11 @@ $dimenNavigationBarHeight: 18px;
         primary: $colorPrimary;
         primaryDark: $colorPrimaryDark;
         accent: $colorAccent;
+    }
+    dimen: {
+        statusBarHeight: $dimenStatusBarHeight;
+        toolBarHeight: $dimenToolBarHeight;
+        navigationBarHeight: $dimenNavigationBarHeight;
     }
 }
 

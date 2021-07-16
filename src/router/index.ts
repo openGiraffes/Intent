@@ -44,6 +44,11 @@ const routes: Array<RouteConfig> = [
         name: 'Other',
         component: () => import("@/views/other/OtherIndex.vue"),
     },
+    {
+        path: '/Picker',
+        name: 'Picker',
+        component: () => import("@/views/picker/PickerIndex.vue"),
+    },
 ]
 
 const router = new VueRouter({

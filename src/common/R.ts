@@ -6,11 +6,15 @@ const rgba_hex = (color: string, alpha: number = 1) => {
     return color + a;
 }
 
+const dimen = (key: string) => {
+    return Number.parseFloat(variables[`dimen-${key}`].replace("px", ""));
+}
+
 export default {
     dimen: {
-        navigationBarHeight: 18,
-        statusBarHeight: 26,
-        toolBarHeight: 36,
+        statusBarHeight: dimen("statusBarHeight"),
+        toolBarHeight: dimen("toolBarHeight"),
+        navigationBarHeight: dimen("navigationBarHeight"),
     },
     color: {
         transparent: "transparent",

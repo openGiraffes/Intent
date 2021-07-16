@@ -36,6 +36,9 @@
     "invalid-input-format":"输入格式有误",
 
     "developer-options": "开发者选项",
+    
+    "title-picker": "文件选择器",
+    "cancel": "取消",
 
     
     "-": "-"

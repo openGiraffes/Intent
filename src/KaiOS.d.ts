@@ -220,6 +220,7 @@ declare interface Navigator {
     };
     mozSettings: SettingsManager;
     mozInputMethod: InputMethod;
+    [key: string]: any;
 };
 
 declare interface Window {

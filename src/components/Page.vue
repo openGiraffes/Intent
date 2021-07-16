@@ -35,6 +35,7 @@ export interface PageOptions {
         options?: NavigationBarOptions,
         padding?: boolean,
         backgroundColor?: string,
+        color?: string,
         show?: boolean,
     }
 }
@@ -102,6 +103,7 @@ export default class Page extends Vue {
     get style_NavigationBar() {
         return {
             backgroundColor: this.mOptions.navigationBar?.backgroundColor,
+            color: this.mOptions.navigationBar?.color,
         }
     }
 

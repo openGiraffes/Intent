@@ -7,25 +7,29 @@
 </template>
 
 <script lang="ts">
+import MyComponent from "@/common/MyComponent";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 export type NavigationBarItem = string | {
     text?: string,
+    color?: string,
 }
 
+type KeyValue = (e: KeyboardEvent) => void;
+
 interface Keys {
-    softLeft?: () => void,
-    enter?: () => void,
-    softRight?: () => void,
-    arrowUp?: () => void,
-    arrowDown?: () => void,
-    arrowLeft?: () => void,
-    arrowRight?: () => void,
-    up?: () => void,
-    down?: () => void,
-    left?: () => void,
-    right?: () => void,
-    [key: string]: any,
+    softLeft?: KeyValue,
+    enter?: KeyValue,
+    softRight?: KeyValue,
+    arrowUp?: KeyValue,
+    arrowDown?: KeyValue,
+    arrowLeft?: KeyValue,
+    arrowRight?: KeyValue,
+    up?: KeyValue,
+    down?: KeyValue,
+    left?: KeyValue,
+    right?: KeyValue,
+    [key: string]: KeyValue | undefined,
 }
 
 type EventType = "keyDown" | "keyUp" | "keyPress" | "keyLongPress";
@@ -41,14 +45,15 @@ export interface NavigationBarOptions {
 }
 
 @Component
-export default class NavigationBar extends Vue {
+export default class NavigationBar extends MyComponent {
 
     @Prop({ default: () => { return {} } }) readonly options!: NavigationBarOptions;
 
     mEventAdded = false;
     mKeyEvents: {
-        key: string,
+        key: string;
         timer: any;
+        event: KeyboardEvent;
     }[] = [];
 
     get left() {
@@ -113,12 +118,15 @@ export default class NavigationBar extends Vue {
         if (!e.repeat) {
             let t = setTimeout(() => {
                 clearTimeout(t);
-                this.mKeyEvents.splice(this.mKeyEvents.findIndex(o => o.key == e.key), 1)
-                this.on("keyLongPress", { key: e.key } as KeyboardEvent);
+                let key = this.mKeyEvents.splice(this.mKeyEvents.findIndex(o => o.key == e.key), 1);
+                if (key.length) {
+                    this.on("keyLongPress", key[0].event);
+                }
             }, 500);
             this.mKeyEvents.push({
                 key: e.key,
                 timer: t,
+                event: e,
             })
         }
         this.on("keyDown", e);
@@ -129,7 +137,7 @@ export default class NavigationBar extends Vue {
         let key = this.mKeyEvents.splice(this.mKeyEvents.findIndex(o => o.key == e.key), 1);
         if (key.length) {
             clearTimeout(key[0].timer);
-            this.on("keyPress", { key: e.key } as KeyboardEvent);
+            this.on("keyPress", key[0].event);
         }
     }
 
@@ -141,45 +149,45 @@ export default class NavigationBar extends Vue {
         switch (e.key) {
             case "SoftLeft":
             case "F1":
-                event.softLeft?.();
+                event.softLeft?.(e);
                 break;
             case "Enter":
-                event.enter?.();
+                event.enter?.(e);
                 break;
             case "SoftRight":
             case "F2":
-                event.softRight?.();
+                event.softRight?.(e);
                 break;
             case "ArrowUp":
-                event.arrowUp?.();
+                event.arrowUp?.(e);
                 break;
             case "ArrowDown":
-                event.arrowDown?.();
+                event.arrowDown?.(e);
                 break;
             case "ArrowLeft":
-                event.arrowLeft?.();
+                event.arrowLeft?.(e);
                 break;
             case "ArrowRight":
-                event.arrowRight?.();
+                event.arrowRight?.(e);
                 break;
             default:
                 if (e.key in event) {
-                    event[e.key]();
+                    event[e.key]?.(e);
                 }
                 break
         }
     }
 
     onClick_Left() {
-        this.options.on?.keyPress?.softLeft?.();
+        this.options.on?.keyPress?.softLeft?.({} as KeyboardEvent);
     }
 
     onClick_Center() {
-        this.options.on?.keyPress?.enter?.();
+        this.options.on?.keyPress?.enter?.({} as KeyboardEvent);
     }
 
     onClick_Right() {
-        this.options.on?.keyPress?.softRight?.();
+        this.options.on?.keyPress?.softRight?.({} as KeyboardEvent);
     }
 }
 </script>

@@ -1,9 +1,9 @@
 {
     "name": "Intent",
     "description": "快捷操作",
-    "version": "0.1.5",
+    "version": "0.2.0",
     "origin": "app://intent.kaios.lcsunm.cc",
-    "launch_path": "/index.html",
+    "launch_path": "/index.html#/Picker",
     "icons": {
         "128": "/icons/icon128x128.png"
     },
@@ -20,6 +20,11 @@
         "wifi-manage": {},
         "settings": { "access": "readwrite" },
         "themeable": {},
-        "webapps-manage": {}
+        "webapps-manage": {},
+        "storage": {},
+        "device-storage:sdcard": { "access": "readwrite" }
+    },
+    "activities": {
+        "picker": { "filters": { "type": ["file/path"] }, "disposition": "inline", "returnValue": true, "href": "/index.html#/Picker" }
     }
 }
