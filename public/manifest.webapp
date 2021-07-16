@@ -3,7 +3,7 @@
     "description": "快捷操作",
     "version": "0.2.0",
     "origin": "app://intent.kaios.lcsunm.cc",
-    "launch_path": "/index.html#/Picker",
+    "launch_path": "/index.html",
     "icons": {
         "128": "/icons/icon128x128.png"
     },
@@ -25,6 +25,6 @@
         "device-storage:sdcard": { "access": "readwrite" }
     },
     "activities": {
-        "picker": { "filters": { "type": ["file/path"] }, "disposition": "inline", "returnValue": true, "href": "/index.html#/Picker" }
+        "pick": { "filters": { "type": ["file/path"] }, "disposition": "inline", "returnValue": true, "href": "/index.html#/Picker" }
     }
 }
