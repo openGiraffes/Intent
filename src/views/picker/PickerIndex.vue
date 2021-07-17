@@ -164,10 +164,15 @@ export default class PickerIndex extends MyPage {
 
     onClick_Item(item: any, index: number) {
         if (!item.path) {
-            let sdcard = navigator.getDeviceStorage(this.mPaths[0].items[this.mPaths[0].index].name);
-            let path = this.mPaths[this.mPaths.length - 2];
-            path = path ? path.items[path.index].name : "";
-            let request = sdcard.get([path, item.name].filter(o => o).join("/"));
+            let path0 = this.mPaths[0].items[this.mPaths[0].index];
+            let sdcard = navigator.getDeviceStorage(path0.name);
+            let sdcardPathLength = path0.path.length;
+            let path:any = this.mPaths[this.mPaths.length - 2];
+            path = path ? (<string>path.items[path.index].path).substring(sdcardPathLength + 1) : "";
+            path = [path, item.name].filter(o => o).join("/");
+            console.log(path);
+            
+            let request = sdcard.get(path);
             request.onsuccess = (res) => {
                 var file = res.target.result;
                 this.mActivityRequest?.postResult({ type: file.type, blob: file });
