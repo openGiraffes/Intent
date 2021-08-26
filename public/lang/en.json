@@ -1,0 +1,46 @@
+{
+    "back": "Back",
+    "about": "About",
+    "version-name": "Version",
+    "build-time": "Build time",
+    "quote": "Quote",
+
+    "display": "Display",
+    "network": "Network",
+    "other": "Other",
+
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    
+    "select-theme": "Select theme",
+    "select": "Select",
+
+    "failed-to-load": "Failed to load!",
+    "set": "Set",
+    "has-set": "Already set",
+    "selected": "Selected",
+    
+    "set-http-proxy": "Set HTTP proxy",
+    "please-select": "Please select",
+    "wifi": "WIFI",
+    "proxy-address": "Proxy address",
+    "select-known-wifi" : "Choose a known WiFi",
+    "get-failed" : "Failed to get!",
+    "additional-separator" : "Append separator",
+    "set-proxy": "Set proxy",
+    "clear-proxy": "Clear proxy",
+    "setup-successful": "Setup successfully",
+    "setup-failed": "Setup failed",
+    "invalid-input-format":"Invalid input format",
+
+    "developer-options": "Developer options",
+    
+    "title-picker": "File selector",
+    "cancel": "Cancel",
+    "empty-folder": "Empty folder",
+
+    
+    "-": "-"
+}
